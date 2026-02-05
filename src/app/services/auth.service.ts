@@ -8,7 +8,7 @@ import { AuthenticatedUsersDto, UsersDto, LoginParamsDto } from '../models/user.
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/users';
+  private apiUrl = 'http://localhost:8080/api/users';
 
   constructor(private http: HttpClient) {}
 
