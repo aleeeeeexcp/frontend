@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface CategoryDto {
-  id: string;
-  name: string;
-  description: string;
-}
+import { CategoryDto } from '../models/category.model';
 
 @Injectable({
   providedIn: 'root',
