@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { LoginParamsDto } from '../models/user.model';
+import { AuthService } from '../../services/auth.service';
+import { LoginParamsDto } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -39,7 +39,7 @@ export class Login {
         next: (response) => {
           console.log('Login successful', response);
           this.isLoading = false;
-          this.router.navigate(['/']);
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Login failed', error);

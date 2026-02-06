@@ -1,0 +1,9 @@
+<h2>Gastos</h2>
+    <ul *ngIf="expenses.length; else noExpenses">
+      <li *ngFor="let expense of expenses">
+        <strong>{{ expense.description }}</strong> - {{ expense.amount }} ({{ expense.date }})
+      </li>
+    </ul>
+    <ng-template #noExpenses>
+      <p>No hay gastos registrados.</p>
+    </ng-template>
