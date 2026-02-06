@@ -1,43 +1,43 @@
-<div class="login-container">
-  <h2>Login</h2>
-  
-  @if (errorMessage) {
-    <div class="error-message">{{ errorMessage }}</div>
-  }
-
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input 
-        id="username" 
-        formControlName="username" 
-        type="text" 
-        class="form-control"
-        [class.invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-      />
-      @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
-        <div class="validation-error">Username is required</div>
-      }
+<div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #f8f9fa; z-index: 1;">
+  <div class="card shadow" style="width: 100%; max-width: 380px;">
+    <div class="card-header bg-primary text-white text-center">
+      <h2 class="mb-0">Login</h2>
     </div>
-
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input 
-        id="password" 
-        formControlName="password" 
-        type="password" 
-        class="form-control"
-        [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-      />
-      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-        <div class="validation-error">Password is required</div>
+    <div class="card-body">
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
       }
-    </div>
-
-    <button type="submit" [disabled]="loginForm.invalid || isLoading" class="btn-submit">
-      @if (isLoading) {
-        <span>Logging in...</span>
-      } @else {
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input 
+            id="username" 
+            formControlName="username" 
+            type="text" 
+            class="form-control"
+            [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+          />
+          @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+            <div class="invalid-feedback">Username is required</div>
+          }
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input 
+            id="password" 
+            formControlName="password" 
+            type="password" 
+            class="form-control"
+            [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+          />
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <div class="invalid-feedback">Password is required</div>
+          }
+        </div>
+        <button type="submit" [disabled]="loginForm.invalid || isLoading" class="btn btn-primary w-100">
+          @if (isLoading) {
+            <span>Logging in...</span>
+          } @else {
         <span>Login</span>
       }
     </button>

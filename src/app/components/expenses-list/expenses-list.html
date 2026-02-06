@@ -1,7 +1,8 @@
 <h2>Gastos</h2>
     <ul *ngIf="expenses.length; else noExpenses">
-      <li *ngFor="let expense of expenses">
-        <strong>{{ expense.description }}</strong> - {{ expense.amount }} ({{ expense.date }})
+      <li *ngFor="let expense of expenses" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ expense.description }}</span>
+        <span class="badge bg-danger rounded-pill">{{ expense.amount | currency:'EUR' }}</span>
       </li>
     </ul>
     <ng-template #noExpenses>

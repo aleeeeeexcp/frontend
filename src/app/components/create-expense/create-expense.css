@@ -1,0 +1,9 @@
+.container {
+  background: #f8f9fa;
+}
+.card {
+  border-radius: 12px;
+}
+.btn {
+  font-size: 1.1rem;
+}

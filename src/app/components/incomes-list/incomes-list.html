@@ -1,1 +1,9 @@
-<p>incomes-list works!</p>
+<h2>Ingresos</h2>
+    <ul *ngIf="incomes.length; else noIncomes">
+      <li *ngFor="let income of incomes">
+        <strong>{{ income.description }}</strong> - {{ income.amount }} ({{ income.date }})
+      </li>
+    </ul>
+    <ng-template #noIncomes>
+      <p>No hay ingresos registrados.</p>
+    </ng-template>

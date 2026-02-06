@@ -1,43 +1,44 @@
-<div class="register-container">
-  <h2>Register</h2>
-  
-  @if (errorMessage) {
-    <div class="error-message">{{ errorMessage }}</div>
-  }
-
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input 
-        id="username" 
-        formControlName="username" 
-        type="text" 
-        class="form-control"
-        [class.invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
-      />
-      @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
-        <div class="validation-error">
-          @if (registerForm.get('username')?.errors?.['required']) {
-            <span>Username is required</span>
-          }
-          @if (registerForm.get('username')?.errors?.['minlength']) {
-            <span>Username must be at least 3 characters</span>
+<div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #f8f9fa; z-index: 1;">
+  <div class="card shadow" style="width: 100%; max-width: 420px;">
+    <div class="card-header bg-success text-white text-center">
+      <h2 class="mb-0">Register</h2>
+    </div>
+    <div class="card-body">
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input 
+            id="username" 
+            formControlName="username" 
+            type="text" 
+            class="form-control"
+            [ngClass]="{'is-invalid': registerForm.get('username')?.invalid && registerForm.get('username')?.touched}"
+          />
+          @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
+            <div class="invalid-feedback">
+              @if (registerForm.get('username')?.errors?.['required']) {
+                <span>Username is required</span>
+              }
+              @if (registerForm.get('username')?.errors?.['minlength']) {
+                <span>Username must be at least 3 characters</span>
+              }
+            </div>
           }
         </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input 
-        id="email" 
-        formControlName="email" 
-        type="email" 
-        class="form-control"
-        [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-      />
-      @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-        <div class="validation-error">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email:</label>
+          <input 
+            id="email" 
+            formControlName="email" 
+            type="email" 
+            class="form-control"
+            [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+          />
+            @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+              <div class="invalid-feedback">
           @if (registerForm.get('email')?.errors?.['required']) {
             <span>Email is required</span>
           }
