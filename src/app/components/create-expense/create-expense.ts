@@ -4,12 +4,13 @@ import { ExpenseService } from '../../services/expense.service';
 import { CategoryService } from '../../services/category.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
 import { CategoryDto } from '../../models/category.model';
 
 @Component({
   selector: 'app-create-expense',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './create-expense.html',
   styleUrls: ['./create-expense.css'],
 })
@@ -24,7 +25,8 @@ export class CreateExpense implements OnInit {
   constructor(
     private expenseService: ExpenseService, 
     private categoryService: CategoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.expenseForm = this.fb.group({
       description: ['', Validators.required],
@@ -62,6 +64,9 @@ export class CreateExpense implements OnInit {
         this.successMessage = 'Gasto creado correctamente';
         this.expenseForm.reset();
         this.loading = false;
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 1500);
       },
       error: (err) => {
         this.errorMessage = 'Error al crear el gasto';

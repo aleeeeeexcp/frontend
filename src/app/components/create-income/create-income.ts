@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
 import { IncomeService } from '../../services/income.service';
 import { CategoryService } from '../../services/category.service';
 import { CategoryDto } from '../../models/category.model';
 
 @Component({
   selector: 'app-create-income',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './create-income.html',
   styleUrls: ['./create-income.css'],
 })
@@ -23,7 +24,8 @@ export class CreateIncome implements OnInit {
   constructor(
     private incomeService: IncomeService,
     private categoryService: CategoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.incomeForm = this.fb.group({
       source: ['', Validators.required],
@@ -62,6 +64,9 @@ export class CreateIncome implements OnInit {
         this.successMessage = 'Ingreso creado correctamente';
         this.incomeForm.reset();
         this.loading = false;
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 1500);
       },
       error: (err) => {
         this.errorMessage = 'Error al crear el ingreso';
