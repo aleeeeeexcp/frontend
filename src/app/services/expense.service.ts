@@ -9,26 +9,29 @@ import { ExpenseDto } from '../models/expense.model';
 })
 export class ExpenseService {
   private apiUrl = 'http://localhost:8080/api/expenses';
-  private token = localStorage.getItem('token'); 
-  private headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getAllUsersExpenses(): Observable<ExpenseDto[]> {
-    return this.http.get<ExpenseDto[]>(this.apiUrl, { headers: this.headers });
+    return this.http.get<ExpenseDto[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
   getAllUsersExpensesByCategory(categoryId: string): Observable<ExpenseDto[]> {
     const params = new HttpParams().set('categoryId', categoryId);
-    return this.http.get<ExpenseDto[]>(`${this.apiUrl}/byCategory`, { params, headers: this.headers });
+    return this.http.get<ExpenseDto[]>(`${this.apiUrl}/byCategory`, { params, headers: this.getHeaders() });
   }
 
   createExpense(expense: ExpenseDto): Observable<ExpenseDto> {
-    return this.http.post<ExpenseDto>(`${this.apiUrl}/createExpense`, expense, { headers: this.headers });
+    return this.http.post<ExpenseDto>(`${this.apiUrl}/createExpense`, expense, { headers: this.getHeaders() });
   }
 
   deleteExpense(expenseId: string): Observable<void> {
     const params = new HttpParams().set('expenseId', expenseId);
-    return this.http.delete<void>(`${this.apiUrl}/delete`, { params, headers: this.headers });
+    return this.http.delete<void>(`${this.apiUrl}/delete`, { params, headers: this.getHeaders() });
   }
 }

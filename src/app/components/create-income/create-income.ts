@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { IncomeService } from '../../services/income.service';
+import { CategoryService } from '../../services/category.service';
+import { CategoryDto } from '../../models/category.model';
 
 @Component({
   selector: 'app-create-income',
@@ -9,19 +11,44 @@ import { IncomeService } from '../../services/income.service';
   templateUrl: './create-income.html',
   styleUrls: ['./create-income.css'],
 })
-export class CreateIncome {
+export class CreateIncome implements OnInit {
 
   incomeForm : FormGroup;
   loading = false;
   errorMessage = '';
   successMessage = '';
+  categories: CategoryDto[] = [];
+  loadingCategories = false;
 
-  constructor(private incomeService: IncomeService  , private fb: FormBuilder) {
+  constructor(
+    private incomeService: IncomeService,
+    private categoryService: CategoryService,
+    private fb: FormBuilder
+  ) {
     this.incomeForm = this.fb.group({
       source: ['', Validators.required],
       description: ['', Validators.required],
       amount: [0, [Validators.required, Validators.min(0.01)]],
-      date: ['', Validators.required]
+      date: ['', Validators.required],
+      categoryId: ['', Validators.required]
+    });
+  }
+
+  ngOnInit() {
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.loadingCategories = true;
+    this.categoryService.getAllCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.loadingCategories = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar categorías', err);
+        this.loadingCategories = false;
+      }
     });
   }
 

@@ -1,11 +1,11 @@
 import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -16,19 +16,19 @@ export class DashboardComponent{
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   goToExpenses() {
-    this.router.navigate(['expenses'], { relativeTo: this.route });
+    this.router.navigate(['/dashboard/expenses']);
   }
 
   goToIncomes() {
-    this.router.navigate(['incomes'], { relativeTo: this.route });
+    this.router.navigate(['/dashboard/incomes']);
   }
 
   createExpense() {
-    this.router.navigate(['create-expense'], { relativeTo: this.route });
+    this.router.navigate(['/dashboard/create-expense']);
   }
 
   createIncome() {
-    this.router.navigate(['create-income'], { relativeTo: this.route });
+    this.router.navigate(['/dashboard/create-income']);
   }
 
 }

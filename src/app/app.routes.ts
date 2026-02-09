@@ -10,14 +10,13 @@ import { CreateExpense } from './components/create-expense/create-expense';
 import { CreateIncome } from './components/create-income/create-income';
 
 export const routes: Routes = [
-   { path: '', component: Home },
-   { path: 'dashboard', component: DashboardComponent, children: [
-       {path: 'expenses', component: ExpensesList},
-       {path: 'incomes', component: IncomesList},
-       {path: 'create-expense', component: CreateExpense},
-       {path: 'create-income', component: CreateIncome}
-   ] } ,
-   { path: 'login', component: Login },
-   { path: 'register', component: Register }
+  { path: '', component: Home },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard/expenses', component: ExpensesList },
+  { path: 'dashboard/incomes', component: IncomesList },
+  { path: 'dashboard/create-expense', component: CreateExpense },
+  { path: 'dashboard/create-income', component: CreateIncome },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register }
 ];
 
