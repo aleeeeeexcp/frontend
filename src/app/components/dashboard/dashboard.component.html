@@ -1,6 +1,189 @@
-<div class="dashboard-container">
-  <button (click)="goToExpenses()" class="btn btn-primary btn-lg m-2 w-100">Gastos</button>
-  <button (click)="createExpense()" class="btn btn-secondary btn-lg m-2 w-100">Registrar gasto</button>
-  <button (click)="goToIncomes()" class="btn btn-success btn-lg m-2 w-100">Ingresos</button>
-  <button (click)="createIncome()" class="btn btn-info btn-lg m-2 w-100">Registrar ingreso</button>
+<div class="dashboard-container fade-in">
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show">
+    {{ errorMessage }}
+  </div>
+  <div class="summary-section">
+    <div class="summary-card balance-card">
+      <div class="summary-icon">
+        <i class="bi bi-graph-up-arrow"></i>
+      </div>
+      <div class="summary-content">
+        <p class="summary-label">Balance</p>
+        <h2 class="summary-value" [class.positive]="balance >= 0" [class.negative]="balance < 0">
+          ${{ balance | number:'1.2-2' }}
+        </h2>
+      </div>
+    </div>
+
+    <div class="summary-card income-card">
+      <div class="summary-icon">
+        <i class="bi bi-arrow-down-circle"></i>
+      </div>
+      <div class="summary-content">
+        <p class="summary-label">Ingresos Totales</p>
+        <h2 class="summary-value">${{ totalIncomes | number:'1.2-2' }}</h2>
+      </div>
+    </div>
+
+    <div class="summary-card expense-card">
+      <div class="summary-icon">
+        <i class="bi bi-arrow-up-circle"></i>
+      </div>
+      <div class="summary-content">
+        <p class="summary-label">Gastos Totales</p>
+        <h2 class="summary-value">${{ totalExpenses | number:'1.2-2' }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="quick-actions">
+    <button class="btn btn-primary" (click)="toggleExpenseForm()">
+      <i class="bi bi-plus-circle"></i> Nuevo Gasto
+    </button>
+    <button class="btn btn-success" (click)="toggleIncomeForm()">
+      <i class="bi bi-plus-circle"></i> Nuevo Ingreso
+    </button>
+  </div>
+  <div *ngIf="showExpenseForm" class="form-modal">
+    <div class="form-card expense-form">
+      <div class="form-header">
+        <h3><i class="bi bi-wallet2"></i> Crear Nuevo Gasto</h3>
+        <button class="btn-close-form" (click)="toggleExpenseForm()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()">
+        <div class="mb-3">
+          <label for="expense-description" class="form-label">Descripción</label>
+          <input id="expense-description" formControlName="description" type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="expense-amount" class="form-label">Cantidad</label>
+          <input id="expense-amount" formControlName="amount" type="number" class="form-control" step="0.01" />
+        </div>
+        <div class="mb-3">
+          <label for="expense-date" class="form-label">Fecha</label>
+          <input id="expense-date" formControlName="date" type="date" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="expense-category" class="form-label">Categoría</label>
+          <select id="expense-category" formControlName="categoryId" class="form-select">
+            <option value="" disabled selected>Seleccionar categoría</option>
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="expenseForm.invalid">
+          Guardar Gasto
+        </button>
+      </form>
+    </div>
+  </div>
+  <div *ngIf="showIncomeForm" class="form-modal">
+    <div class="form-card income-form">
+      <div class="form-header">
+        <h3><i class="bi bi-cash-stack"></i> Crear Nuevo Ingreso</h3>
+        <button class="btn-close-form" (click)="toggleIncomeForm()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <form [formGroup]="incomeForm" (ngSubmit)="submitIncome()">
+        <div class="mb-3">
+          <label for="income-source" class="form-label">Origen</label>
+          <input id="income-source" formControlName="source" type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="income-description" class="form-label">Descripción</label>
+          <input id="income-description" formControlName="description" type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="income-amount" class="form-label">Cantidad</label>
+          <input id="income-amount" formControlName="amount" type="number" class="form-control" step="0.01" />
+        </div>
+        <div class="mb-3">
+          <label for="income-date" class="form-label">Fecha</label>
+          <input id="income-date" formControlName="date" type="date" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="income-category" class="form-label">Categoría</label>
+          <select id="income-category" formControlName="categoryId" class="form-select">
+            <option value="" disabled selected>Seleccionar categoría</option>
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success w-100" [disabled]="incomeForm.invalid">
+          Guardar Ingreso
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="data-grid">
+    <div class="data-section expense-section">
+      <div class="section-header">
+        <h3><i class="bi bi-wallet2"></i> Gastos Recientes</h3>
+        <a routerLink="/expenses" class="btn-view-all" title="Ver todos los gastos">
+          <i class="bi bi-box-arrow-up-right"></i>
+        </a>
+      </div>
+      <div *ngIf="loadingExpenses" class="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+      <div *ngIf="!loadingExpenses && expenses.length" class="items-list">
+        <div *ngFor="let expense of displayedExpenses" class="item-card expense-item">
+          <div class="item-header">
+            <h4>{{ expense.description }}</h4>
+            <span class="item-amount expense-amount">${{ expense.amount }}</span>
+          </div>
+          <div class="item-footer">
+            <span class="item-date">
+              <i class="bi bi-calendar"></i> {{ expense.date | date:'dd/MM/yyyy' }}
+            </span>
+            <button class="btn-delete" (click)="deleteExpense(expense.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!loadingExpenses && !expenses.length" class="empty-message">
+        <i class="bi bi-inbox"></i>
+        <p>No hay gastos registrados</p>
+      </div>
+    </div>
+    <div class="data-section income-section">
+      <div class="section-header">
+        <h3><i class="bi bi-cash-stack"></i> Ingresos Recientes</h3>
+        <a routerLink="/incomes" class="btn-view-all" title="Ver todos los ingresos">
+          <i class="bi bi-box-arrow-up-right"></i>
+        </a>
+      </div>
+      <div *ngIf="loadingIncomes" class="loading">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+      <div *ngIf="!loadingIncomes && incomes.length" class="items-list">
+        <div *ngFor="let income of displayedIncomes" class="item-card income-item">
+          <div class="item-header">
+            <div>
+              <span class="item-source">{{ income.source }}</span>
+              <h4>{{ income.description }}</h4>
+            </div>
+            <span class="item-amount income-amount">${{ income.amount }}</span>
+          </div>
+          <div class="item-footer">
+            <span class="item-date">
+              <i class="bi bi-calendar"></i> {{ income.date | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!loadingIncomes && !incomes.length" class="empty-message">
+        <i class="bi bi-inbox"></i>
+        <p>No hay ingresos registrados</p>
+      </div>
+    </div>
+  </div>
 </div>

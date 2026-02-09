@@ -1,10 +1,40 @@
-<h2>Gastos</h2>
-    <ul *ngIf="expenses.length; else noExpenses">
-      <li *ngFor="let expense of expenses" class="list-group-item d-flex justify-content-between align-items-center">
-        <span>{{ expense.description }}</span>
-        <span class="badge bg-danger rounded-pill">{{ expense.amount }}</span>
-      </li>
-    </ul>
-    <ng-template #noExpenses>
-      <p>No hay gastos registrados.</p>
-    </ng-template>
+<div class="expenses-container fade-in">
+  <div class="list-header">
+    <div class="header-left">
+      <button class="btn-back" routerLink="/dashboard">
+        <i class="bi bi-arrow-left"></i> Dashboard
+      </button>
+      <h1>
+        <i class="bi bi-wallet2"></i> Mis Gastos
+      </h1>
+    </div>
+    <button class="btn btn-primary" routerLink="/create-expense">
+      <i class="bi bi-plus-circle"></i> Nuevo Gasto
+    </button>
+  </div>
+
+  <div *ngIf="expenses.length; else noExpenses" class="expenses-grid">
+    <div *ngFor="let expense of expenses" class="expense-card">
+      <div class="expense-header">
+        <h3>{{ expense.description }}</h3>
+        <span class="expense-badge">${{ expense.amount }}</span>
+      </div>
+      <div class="expense-footer">
+        <span class="expense-date">
+          <i class="bi bi-calendar"></i> {{ expense.date | date:'dd/MM/yyyy' }}
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #noExpenses>
+    <div class="empty-state">
+      <i class="bi bi-inbox"></i>
+      <h3>No hay gastos registrados</h3>
+      <p>Comienza añadiendo tu primer gasto</p>
+      <button class="btn btn-primary" routerLink="/create-expense">
+        <i class="bi bi-plus-circle"></i> Crear Gasto
+      </button>
+    </div>
+  </ng-template>
+</div>
