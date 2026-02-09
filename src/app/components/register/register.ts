@@ -41,7 +41,7 @@ export class Register {
         next: (response) => {
           console.log('Registration successful', response);
           this.isLoading = false;
-          this.router.navigate(['/']);
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           console.error('Registration failed', error);

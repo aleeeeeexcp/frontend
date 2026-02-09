@@ -54,7 +54,6 @@ export class DashboardComponent implements OnInit {
       description: ['', Validators.required],
       amount: [0, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required]
     });
   }
 

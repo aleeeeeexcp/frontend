@@ -17,7 +17,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.saveToken(response.serviceToken);
-          this.saveUser(response);
+          this.saveUser(response.userDto);
         })
       );
   }
@@ -26,8 +26,11 @@ export class AuthService {
     return this.http.post<AuthenticatedUsersDto>(`${this.apiUrl}/login`, loginData)
       .pipe(
         tap(response => {
+          console.log('Auth Service - Response completa:', response);
+          console.log('Auth Service - roleType:', response.userDto.roleType);
           this.saveToken(response.serviceToken);
-          this.saveUser(response);
+          this.saveUser(response.userDto);
+          console.log('Auth Service - Usuario guardado:', JSON.parse(localStorage.getItem('user') || '{}'));
         })
       );
   }
@@ -49,12 +52,17 @@ export class AuthService {
     localStorage.setItem('token', token);
   }
 
-  private saveUser(user: AuthenticatedUsersDto): void {
+  private saveUser(user: any): void {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  getUser(): AuthenticatedUsersDto | null {
+  getUser(): any {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+  }
+
+  isAdmin(): boolean {
+    const user = this.getUser();
+    return user?.roleType === 'ADMIN';
   }
 }

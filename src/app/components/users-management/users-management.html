@@ -1,0 +1,56 @@
+<div class="users-container fade-in">
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn-back" routerLink="/admin-dashboard">
+        <i class="bi bi-arrow-left"></i> Dashboard
+      </button>
+      <h1>
+        <i class="bi bi-people"></i> Gestión de Usuarios
+      </h1>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <div *ngIf="!loading && users.length" class="users-table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th><i class="bi bi-person"></i> Usuario</th>
+          <th><i class="bi bi-envelope"></i> Email</th>
+          <th><i class="bi bi-shield"></i> Rol</th>
+          <th class="text-center"><i class="bi bi-gear"></i> Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td class="user-name">{{ user.username }}</td>
+          <td class="user-email">{{ user.email }}</td>
+          <td>
+            <span class="role-badge" [class.admin]="user.roleType === 'ADMIN'">
+              {{ user.roleType || 'USER' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-action btn-edit" title="Editar usuario">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn-action btn-delete" title="Eliminar usuario">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !users.length" class="empty-state">
+    <i class="bi bi-people"></i>
+    <h3>No hay usuarios en el sistema</h3>
+  </div>
+</div>

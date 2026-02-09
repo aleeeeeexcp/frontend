@@ -1,0 +1,122 @@
+<div class="admin-dashboard-container fade-in">
+  <div class="admin-header">
+    <div>
+      <h1><i class="bi bi-shield-check"></i> Panel de Administración</h1>
+      <p class="subtitle">Gestiona usuarios y configuraciones del sistema</p>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card users-card">
+      <div class="stat-icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Usuarios</p>
+        <h2 class="stat-value">{{ users.length }}</h2>
+        <p class="stat-detail">{{ adminCount }} admins, {{ userCount }} usuarios</p>
+      </div>
+    </div>
+
+    <div class="stat-card categories-card">
+      <div class="stat-icon">
+        <i class="bi bi-tags-fill"></i>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Categorías</p>
+        <h2 class="stat-value">{{ categories.length }}</h2>
+        <p class="stat-detail">Activas en el sistema</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions-section">
+    <h2><i class="bi bi-lightning-fill"></i> Acciones Rápidas</h2>
+    <div class="actions-grid">
+      <a routerLink="/users" class="action-card">
+        <i class="bi bi-people"></i>
+        <h3>Gestionar Usuarios</h3>
+        <p>Ver, editar y eliminar usuarios</p>
+      </a>
+      
+      <a routerLink="/categories" class="action-card">
+        <i class="bi bi-tags"></i>
+        <h3>Gestionar Categorías</h3>
+        <p>Administrar categorías del sistema</p>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="recent-section">
+    <div class="section-header">
+      <h2><i class="bi bi-clock-history"></i> Usuarios Recientes</h2>
+      <a routerLink="/users" class="btn-view-all">
+        Ver todos <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <div *ngIf="loadingUsers" class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingUsers && users.length" class="users-table-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users.slice(0, 8)">
+            <td>
+              <div class="user-cell">
+                <i class="bi bi-person-circle"></i>
+                <span class="user-name">{{ user.username }}</span>
+              </div>
+            </td>
+            <td class="email-cell">{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [class.admin]="user.roleType === 'ADMIN'">
+                {{ user.roleType || 'USER' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!loadingUsers && !users.length" class="empty-state">
+      <i class="bi bi-inbox"></i>
+      <h3>No hay usuarios en el sistema</h3>
+      <p>Los usuarios registrados aparecerán aquí</p>
+    </div>
+  </div>
+
+  <div class="categories-section">
+    <div class="section-header">
+      <h2><i class="bi bi-tags"></i> Categorías del Sistema</h2>
+    </div>
+
+    <div *ngIf="loadingCategories" class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingCategories && categories.length" class="categories-grid">
+      <div *ngFor="let category of categories" class="category-card">
+        <i class="bi bi-tag-fill"></i>
+        <h4>{{ category.name }}</h4>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingCategories && !categories.length" class="empty-state">
+      <i class="bi bi-inbox"></i>
+      <h3>No hay categorías</h3>
+    </div>
+  </div>
+</div>

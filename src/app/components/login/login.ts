@@ -37,12 +37,15 @@ export class Login {
 
       this.authService.login(loginData).subscribe({
         next: (response) => {
-          console.log('Login successful', response);
           this.isLoading = false;
-          this.router.navigate(['/dashboard']);
+          
+          if (response.userDto.roleType === 'ADMIN') {
+            this.router.navigate(['/admin-dashboard']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         },
         error: (error) => {
-          console.error('Login failed', error);
           this.errorMessage = error.error?.message || 'Invalid username or password';
           this.isLoading = false;
         }

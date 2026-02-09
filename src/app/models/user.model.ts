@@ -12,8 +12,11 @@ export interface LoginParamsDto {
 
 export interface AuthenticatedUsersDto {
   serviceToken: string;
-  id: number;
-  username: string;
-  email: string;
-  roleType: string;
+  userDto: {
+    id: string;
+    username: string;
+    email: string;
+    password: string | null;
+    roleType: string;
+  };
 }
