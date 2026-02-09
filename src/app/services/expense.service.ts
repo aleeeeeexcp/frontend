@@ -34,4 +34,22 @@ export class ExpenseService {
     const params = new HttpParams().set('expenseId', expenseId);
     return this.http.delete<void>(`${this.apiUrl}/delete`, { params, headers: this.getHeaders() });
   }
+
+  getUsersExpensesByAmountDesc() : Observable<ExpenseDto[]> {
+    return this.http.get<ExpenseDto[]>(`${this.apiUrl}/sortedByAmount`, { headers: this.getHeaders() });
+  }
+
+  getUsersExpensesByDateDesc() : Observable<ExpenseDto[]> {
+    return this.http.get<ExpenseDto[]>(`${this.apiUrl}/sortedByDate`, { headers: this.getHeaders() });
+  }
+
+  getUsersExpensesByCategoryAndDateDesc(categoryId: string) : Observable<ExpenseDto[]> {
+    const params = new HttpParams().set('categoryId', categoryId);
+    return this.http.get<ExpenseDto[]>(`${this.apiUrl}/byCategory/sortedByDate`, { params, headers: this.getHeaders() });
+  }
+
+  getUsersExpensesByCategoryAndAmountDesc(categoryId: string) : Observable<ExpenseDto[]> {
+    const params = new HttpParams().set('categoryId', categoryId);
+    return this.http.get<ExpenseDto[]>(`${this.apiUrl}/byCategory/sortedByAmount`, { params, headers: this.getHeaders() });
+  }
 }
