@@ -36,7 +36,6 @@ export class DashboardComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    private router: Router,
     private expenseService: ExpenseService,
     private incomeService: IncomeService,
     private categoryService: CategoryService,
@@ -110,12 +109,8 @@ export class DashboardComponent implements OnInit {
         this.categories = categories || [];
         this.loadingCategories = false;
         this.cdr.detectChanges();
-        console.log('✓ Categorías cargadas correctamente:', categories?.length || 0);
       },
       error: (err) => {
-        console.error('✗ Error al cargar categorías:', err);
-        console.error('Status:', err.status);
-        console.error('Message:', err.message);
         this.errorMessage = `Error al cargar categorías: ${err.status === 0 ? 'Backend no disponible' : err.message}`;
         this.categories = [];
         this.loadingCategories = false;

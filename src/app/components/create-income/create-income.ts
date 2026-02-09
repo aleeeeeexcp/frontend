@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { IncomeService } from '../../services/income.service';
-import { CategoryService } from '../../services/category.service';
 import { CategoryDto } from '../../models/category.model';
 
 @Component({
@@ -12,7 +11,7 @@ import { CategoryDto } from '../../models/category.model';
   templateUrl: './create-income.html',
   styleUrls: ['./create-income.css'],
 })
-export class CreateIncome implements OnInit {
+export class CreateIncome {
 
   incomeForm : FormGroup;
   loading = false;
@@ -23,7 +22,6 @@ export class CreateIncome implements OnInit {
 
   constructor(
     private incomeService: IncomeService,
-    private categoryService: CategoryService,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -32,27 +30,9 @@ export class CreateIncome implements OnInit {
       description: ['', Validators.required],
       amount: [0, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    this.loadCategories();
-  }
-
-  loadCategories() {
-    this.loadingCategories = true;
-    this.categoryService.getAllCategories().subscribe({
-      next: (categories) => {
-        this.categories = categories;
-        this.loadingCategories = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar categorías', err);
-        this.loadingCategories = false;
-      }
-    });
-  }
 
   onSubmit() {
     if (this.incomeForm.invalid) return;

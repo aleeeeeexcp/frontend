@@ -26,14 +26,7 @@
 					<label for="date" class="form-label">Fecha</label>
 					<input id="date" formControlName="date" type="date" class="form-control" required />
 				</div>
-			<div class="mb-3">
-				<label for="categoryId" class="form-label">Categoría</label>
-				<select id="categoryId" formControlName="categoryId" class="form-select" required>
-					<option value="" disabled selected>Seleccionar categoría</option>
-					<option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-				</select>
-			</div>
-			<button type="submit" class="btn btn-success w-100" [disabled]="incomeForm.invalid || loading || loadingCategories">
+			<button type="submit" class="btn btn-success w-100" [disabled]="incomeForm.invalid || loading ">
 					{{ loading ? 'Guardando...' : 'Crear Ingreso' }}
 				</button>
 			</form>

@@ -14,6 +14,11 @@ export class App {
 
   constructor(public authService: AuthService, private router: Router) {}
 
+  isHomePage(): boolean {
+    const url = this.router.url;
+    return url === '/' || url === '/home' || url === '/login' || url === '/register';
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
