@@ -5,4 +5,5 @@ export interface ExpenseDto {
   date: string;
   categoryId?: string;
   userId?: string;
+  groupId?: string;
 }

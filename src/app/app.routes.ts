@@ -9,6 +9,9 @@ import { ExpensesList } from './components/expenses-list/expenses-list';
 import { IncomesList } from './components/incomes-list/incomes-list';
 import { CreateExpense } from './components/create-expense/create-expense';
 import { CreateIncome } from './components/create-income/create-income';
+import { CreateGroup } from './components/create-group/create-group';
+import { GroupsList } from './components/groups-list/groups-list';
+import { GroupView } from './components/group-view/group-view';
 import { UsersManagement } from './components/users-management/users-management';
 
 export const routes: Routes = [
@@ -19,6 +22,9 @@ export const routes: Routes = [
   { path: 'incomes', component: IncomesList },
   { path: 'create-expense', component: CreateExpense },
   { path: 'create-income', component: CreateIncome },
+  { path: 'create-group', component: CreateGroup },
+  { path: 'groups', component: GroupsList },
+  { path: 'groups/:id', component: GroupView },
   { path: 'users', component: UsersManagement },
   { path: 'login', component: Login },
   { path: 'register', component: Register }

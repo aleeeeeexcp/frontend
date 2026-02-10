@@ -5,4 +5,5 @@ export interface IncomeDto {
   description: string;
   date: string;
   userId?: string;
+  groupId?: string;
 }

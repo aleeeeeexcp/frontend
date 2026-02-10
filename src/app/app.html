@@ -8,6 +8,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item" *ngIf="authService.isAdmin()">
+          <a class="nav-link" routerLink="/admin-dashboard" routerLinkActive="active">
+            <i class="bi bi-shield-check"></i> Admin
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="authService.isAdmin()">
+          <a class="nav-link" routerLink="/users" routerLinkActive="active">
+            <i class="bi bi-people"></i> Usuarios
+          </a>
+        </li>
 
         <li class="nav-item user-info">
           <span class="user-name">

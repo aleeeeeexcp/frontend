@@ -52,6 +52,11 @@
   color: #667eea;
 }
 
+.nav-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
 .nav-link i {
   font-size: 1.1rem;
 }

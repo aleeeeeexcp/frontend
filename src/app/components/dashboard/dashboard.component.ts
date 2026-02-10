@@ -4,9 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { ExpenseService } from '../../services/expense.service';
 import { IncomeService } from '../../services/income.service';
 import { CategoryService } from '../../services/category.service';
+import { GroupService } from '../../services/group.service';
 import { ExpenseDto } from '../../models/expense.model';
 import { IncomeDto } from '../../models/income.model';
 import { CategoryDto } from '../../models/category.model';
+import { GroupDto } from '../../models/group.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -21,10 +23,12 @@ export class DashboardComponent implements OnInit {
   expenses: ExpenseDto[] = [];
   incomes: IncomeDto[] = [];
   categories: CategoryDto[] = [];
+  groups: GroupDto[] = [];
   
   loadingExpenses = true;
   loadingIncomes = true;
   loadingCategories = true;
+  loadingGroups = true;
   
   showExpenseForm = false;
   showIncomeForm = false;
@@ -38,6 +42,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private expenseService: ExpenseService,
     private incomeService: IncomeService,
+    private groupService: GroupService,
     private categoryService: CategoryService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
@@ -46,7 +51,8 @@ export class DashboardComponent implements OnInit {
       description: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required]
+      categoryId: ['', Validators.required],
+      groupId: ['']
     });
     
     this.incomeForm = this.fb.group({
@@ -54,6 +60,7 @@ export class DashboardComponent implements OnInit {
       description: ['', Validators.required],
       amount: [0, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
+      groupId: ['']
     });
   }
 
@@ -61,6 +68,7 @@ export class DashboardComponent implements OnInit {
     this.loadExpenses();
     this.loadIncomes();
     this.loadCategories();
+    this.loadGroups();
   }
 
   loadExpenses() {
@@ -119,6 +127,25 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  loadGroups() {
+    this.loadingGroups = true;
+    
+    this.groupService.getAllGroups().subscribe({
+      next: (groups) => {
+        this.groups = groups || [];
+        this.loadingGroups = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMessage = `Error al cargar grupos: ${err.status === 0 ? 'Backend no disponible' : err.message}`;
+        this.groups = [];
+        this.loadingGroups = false;
+        this.cdr.detectChanges();
+        setTimeout(() => this.errorMessage = '', 5000);
+      }
+    });
+  }
+
   get totalExpenses(): number {
     return this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
   }
@@ -137,6 +164,10 @@ export class DashboardComponent implements OnInit {
 
   get displayedIncomes(): IncomeDto[] {
     return this.incomes.slice(0, 3);
+  }
+
+  get displayedGroups(): GroupDto[] {
+    return this.groups.slice(0, 3);
   }
 
   toggleExpenseForm() {

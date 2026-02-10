@@ -1,7 +1,8 @@
 export interface UsersDto {
+  id?: string;
   username: string;
   email: string;
-  password: string;
+  password?: string;
   roleType?: string;
 }
 

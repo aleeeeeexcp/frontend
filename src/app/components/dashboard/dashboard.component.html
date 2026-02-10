@@ -46,6 +46,9 @@
     <button class="btn btn-success" (click)="toggleIncomeForm()">
       <i class="bi bi-plus-circle"></i> Nuevo Ingreso
     </button>
+    <button class="btn btn-info" routerLink="/create-group">
+      <i class="bi bi-people-fill"></i> Crear Grupo
+    </button>
   </div>
   <div *ngIf="showExpenseForm" class="form-modal">
     <div class="form-card expense-form">
@@ -73,6 +76,13 @@
           <select id="expense-category" formControlName="categoryId" class="form-select">
             <option value="" disabled selected>Seleccionar categoría</option>
             <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="expense-group" class="form-label">Grupo (Opcional)</label>
+          <select id="expense-group" formControlName="groupId" class="form-select">
+            <option value="">Sin grupo</option>
+            <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary w-100" [disabled]="expenseForm.invalid">
@@ -107,10 +117,10 @@
           <input id="income-date" formControlName="date" type="date" class="form-control" />
         </div>
         <div class="mb-3">
-          <label for="income-category" class="form-label">Categoría</label>
-          <select id="income-category" formControlName="categoryId" class="form-select">
-            <option value="" disabled selected>Seleccionar categoría</option>
-            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+          <label for="income-group" class="form-label">Grupo (Opcional)</label>
+          <select id="income-group" formControlName="groupId" class="form-select">
+            <option value="">Sin grupo</option>
+            <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
           </select>
         </div>
         <button type="submit" class="btn btn-success w-100" [disabled]="incomeForm.invalid">
@@ -184,6 +194,36 @@
       <div *ngIf="!loadingIncomes && !incomes.length" class="empty-message">
         <i class="bi bi-inbox"></i>
         <p>No hay ingresos registrados</p>
+      </div>
+    </div>
+    <div class="data-section groups-section">
+      <div class="section-header">
+        <h3><i class="bi bi-people-fill"></i> Grupos Recientes</h3>
+        <a routerLink="/groups" class="btn-view-all" title="Ver todos los grupos">
+          <i class="bi bi-box-arrow-up-right"></i>
+        </a>
+      </div>
+      <div *ngIf="loadingGroups" class="loading">
+        <div class="spinner-border text-info" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+      <div *ngIf="!loadingGroups && groups.length" class="items-list">
+        <div *ngFor="let group of displayedGroups" class="item-card group-item">
+          <div class="item-header">
+            <h4>{{ group.name }}</h4>
+            <span class="item-members">
+              <i class="bi bi-person-fill"></i> {{ group.memberIds?.length || 0 }}
+            </span>
+          </div>
+          <div class="item-body">
+            <p class="item-description">{{ group.description }}</p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!loadingGroups && !groups.length" class="empty-message">
+        <i class="bi bi-inbox"></i>
+        <p>No hay grupos registrados</p>
       </div>
     </div>
   </div>
