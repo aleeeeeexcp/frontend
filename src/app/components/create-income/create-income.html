@@ -1,37 +1,116 @@
-<div class="container d-flex align-items-center justify-content-center min-vh-100">
-	<div class="card shadow" style="width: 100%; max-width: 420px;">
-		<div class="card-header bg-success text-white text-center">
-			<div class="header-with-back">
-				<a routerLink="/dashboard" class="btn-back-inline">
-					<i class="bi bi-arrow-left"></i>
-				</a>
-				<h2 class="mb-0">Crear Ingreso</h2>
-			</div>
-		</div>
-		<div class="card-body">
-			<form [formGroup]="incomeForm" (ngSubmit)="onSubmit()">
-				<div class="mb-3">
-					<label for="source" class="form-label">Origen</label>
-					<input id="source" formControlName="source" type="text" class="form-control" required />
-				</div>
-				<div class="mb-3">
-					<label for="description" class="form-label">Descripción</label>
-					<input id="description" formControlName="description" type="text" class="form-control" required />
-				</div>
-				<div class="mb-3">
-					<label for="amount" class="form-label">Cantidad</label>
-					<input id="amount" formControlName="amount" type="number" class="form-control" required min="0.01" step="0.01" />
-				</div>
-				<div class="mb-3">
-					<label for="date" class="form-label">Fecha</label>
-					<input id="date" formControlName="date" type="date" class="form-control" required />
-				</div>
-			<button type="submit" class="btn btn-success w-100" [disabled]="incomeForm.invalid || loading ">
-					{{ loading ? 'Guardando...' : 'Crear Ingreso' }}
-				</button>
-			</form>
-			<div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
-			<div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
-		</div>
-	</div>
+<div class="create-income-container fade-in">
+  <div class="page-header">
+    <button class="btn-back" routerLink="/dashboard">
+      <i class="bi bi-arrow-left"></i> Volver
+    </button>
+    <h1>
+      <i class="bi bi-cash-stack"></i> Crear Nuevo Ingreso
+    </h1>
+  </div>
+
+  <div class="form-container">
+    <div *ngIf="successMessage" class="alert alert-success">
+      <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="incomeForm" (ngSubmit)="onSubmit()" class="income-form">
+      <div class="form-group">
+        <label for="source" class="form-label">
+          <i class="bi bi-briefcase"></i> Origen
+        </label>
+        <input 
+          id="source" 
+          type="text" 
+          class="form-control" 
+          formControlName="source"
+          placeholder="Ej: Salario, Freelance">
+        <div *ngIf="incomeForm.get('source')?.invalid && incomeForm.get('source')?.touched" class="error-message">
+          <span *ngIf="incomeForm.get('source')?.errors?.['required']">El origen es obligatorio</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">
+          <i class="bi bi-card-text"></i> Descripción
+        </label>
+        <input 
+          id="description" 
+          type="text" 
+          class="form-control" 
+          formControlName="description"
+          placeholder="Ej: Pago mensual">
+        <div *ngIf="incomeForm.get('description')?.invalid && incomeForm.get('description')?.touched" class="error-message">
+          <span *ngIf="incomeForm.get('description')?.errors?.['required']">La descripción es obligatoria</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="amount" class="form-label">
+          <i class="bi bi-currency-dollar"></i> Cantidad
+        </label>
+        <input 
+          id="amount" 
+          type="number" 
+          class="form-control" 
+          formControlName="amount"
+          min="0.01"
+          step="0.01"
+          placeholder="0.00">
+        <div *ngIf="incomeForm.get('amount')?.invalid && incomeForm.get('amount')?.touched" class="error-message">
+          <span *ngIf="incomeForm.get('amount')?.errors?.['required']">La cantidad es obligatoria</span>
+          <span *ngIf="incomeForm.get('amount')?.errors?.['min']">La cantidad debe ser mayor a 0</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="date" class="form-label">
+          <i class="bi bi-calendar-event"></i> Fecha
+        </label>
+        <input 
+          id="date" 
+          type="date" 
+          class="form-control" 
+          formControlName="date">
+        <div *ngIf="incomeForm.get('date')?.invalid && incomeForm.get('date')?.touched" class="error-message">
+          <span *ngIf="incomeForm.get('date')?.errors?.['required']">La fecha es obligatoria</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="groupId" class="form-label">
+          <i class="bi bi-people"></i> Grupo (Opcional)
+        </label>
+        <div *ngIf="loadingGroups" class="loading-groups">
+          <div class="spinner-border spinner-border-sm text-primary"></div>
+          <span>Cargando grupos...</span>
+        </div>
+        <select 
+          *ngIf="!loadingGroups"
+          id="groupId" 
+          class="form-control" 
+          formControlName="groupId">
+          <option value="">Sin grupo</option>
+          <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" routerLink="/dashboard" [disabled]="loading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="incomeForm.invalid || loading || loadingGroups">
+          <span *ngIf="!loading">
+            <i class="bi bi-plus-circle"></i> Crear Ingreso
+          </span>
+          <span *ngIf="loading">
+            <span class="spinner-border spinner-border-sm me-2"></span> Guardando...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
