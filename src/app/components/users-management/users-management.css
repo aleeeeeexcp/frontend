@@ -7,6 +7,40 @@
   box-sizing: border-box;
 }
 
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-success {
+  background: white;
+  color: #10b981;
+  border: 2px solid #10b981;
+}
+
+.alert-danger {
+  background: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
