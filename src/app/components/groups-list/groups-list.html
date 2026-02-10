@@ -1,0 +1,70 @@
+
+<div class="groups-container fade-in">
+  <div class="page-header">
+    <button class="btn-back" routerLink="/dashboard">
+      <i class="bi bi-arrow-left"></i> Dashboard
+    </button>
+    <div class="header-content">
+      <h1>
+        <i class="bi bi-people-fill"></i> Mis Grupos
+      </h1>
+      <a routerLink="/create-group" class="btn-create">
+        <i class="bi bi-plus-circle"></i> Crear Grupo
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando grupos...</p>
+  </div>
+
+  <div *ngIf="!loading && !groups.length && !errorMessage" class="empty-state">
+    <i class="bi bi-inbox"></i>
+    <h2>No tienes grupos</h2>
+    <p>Crea tu primer grupo para colaborar con otros usuarios</p>
+    <a routerLink="/create-group" class="btn-empty">
+      <i class="bi bi-plus-circle"></i> Crear Primer Grupo
+    </a>
+  </div>
+
+  <div *ngIf="!loading && groups.length" class="groups-grid">
+    <div *ngFor="let group of groups" class="group-card" (click)="group.id && viewGroup(group.id)">
+      <div class="group-header">
+        <div class="group-icon">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="group-info">
+          <h3>{{ group.name }}</h3>
+          <p class="group-date">
+            <i class="bi bi-calendar-event"></i>
+            Creado el {{ formatDate(group.createdAt || '') }}
+          </p>
+        </div>
+      </div>
+
+      <p class="group-description">{{ group.description }}</p>
+
+      <div class="group-footer">
+        <div class="group-members">
+          <i class="bi bi-person-check-fill"></i>
+          <span>{{ group.memberIds?.length || 0 }} miembros</span>
+        </div>
+        <div class="group-actions">
+          <button class="btn-action btn-view" title="Ver detalles" [routerLink]="['/groups', group.id]">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn-action btn-settings" title="Configuración" *ngIf="group.ownerId">
+            <i class="bi bi-gear"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
