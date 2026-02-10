@@ -1,0 +1,66 @@
+<div class="create-category-container fade-in">
+  <div class="page-header">
+    <button class="btn-back" routerLink="/categories">
+      <i class="bi bi-arrow-left"></i> Volver
+    </button>
+    <h1>
+      <i class="bi bi-tag-fill"></i> Crear Nueva Categoría
+    </h1>
+  </div>
+
+  <div class="form-container">
+    <div *ngIf="successMessage" class="alert alert-success">
+      <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-form">
+      <div class="form-group">
+        <label for="name" class="form-label">
+          <i class="bi bi-tag"></i> Nombre
+        </label>
+        <input 
+          id="name" 
+          type="text" 
+          class="form-control" 
+          formControlName="name"
+          placeholder="Ej: Alimentación, Transporte">
+        <div *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched" class="error-message">
+          <span *ngIf="categoryForm.get('name')?.errors?.['required']">El nombre es obligatorio</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">
+          <i class="bi bi-card-text"></i> Descripción
+        </label>
+        <textarea 
+          id="description" 
+          class="form-control" 
+          formControlName="description"
+          rows="4"
+          placeholder="Descripción de la categoría"></textarea>
+        <div *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched" class="error-message">
+          <span *ngIf="categoryForm.get('description')?.errors?.['required']">La descripción es obligatoria</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" routerLink="/categories" [disabled]="loading">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="categoryForm.invalid || loading">
+          <span *ngIf="!loading">
+            <i class="bi bi-plus-circle"></i> Crear Categoría
+          </span>
+          <span *ngIf="loading">
+            <span class="spinner-border spinner-border-sm me-2"></span> Guardando...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

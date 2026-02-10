@@ -1,0 +1,79 @@
+<div class="categories-container fade-in">
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn-back" routerLink="/admin-dashboard">
+        <i class="bi bi-arrow-left"></i> Dashboard
+      </button>
+      <div class="title-row">
+        <h1>
+          <i class="bi bi-tags"></i> Gestión de Categorías
+        </h1>
+        <a routerLink="/create-category" class="btn-create">
+          <i class="bi bi-plus-circle"></i> Nueva Categoría
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando categorías...</p>
+  </div>
+
+  <div *ngIf="!loading && categories.length" class="categories-table-container">
+    <table class="categories-table">
+      <thead>
+        <tr>
+          <th><i class="bi bi-tag"></i> Nombre</th>
+          <th><i class="bi bi-card-text"></i> Descripción</th>
+          <th class="text-center"><i class="bi bi-gear"></i> Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories">
+          <td class="category-name">
+            <i class="bi bi-tag-fill"></i>
+            {{ category.name }}
+          </td>
+          <td class="category-description">{{ category.description || 'Sin descripción' }}</td>
+          <td class="actions">
+            <button class="btn-action btn-edit" title="Editar categoría">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn-action btn-delete" title="Eliminar categoría" (click)="deleteCategory(category.id!, category.name)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !categories.length" class="empty-state">
+    <i class="bi bi-tags"></i>
+    <h3>No hay categorías en el sistema</h3>
+    <p>Las categorías aparecerán aquí</p>
+  </div>
+
+  <!-- Dialog de confirmación -->
+  <app-confirm-dialog
+    [isOpen]="showDeleteDialog"
+    title="Eliminar Categoría"
+    [message]="deleteMessage"
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    type="danger"
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-dialog>
+</div>

@@ -23,4 +23,11 @@ export class CategoryService {
   createCategory(category: CategoryDto): Observable<CategoryDto> {
     return this.http.post<CategoryDto>(`${this.apiUrl}/createCategory`, category, { headers: this.getHeaders() });
   }
+
+  deleteCategory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/deleteCategory`, {
+      headers: this.getHeaders(),
+      body: id
+    });
+  }
 }

@@ -13,6 +13,8 @@ import { CreateGroup } from './components/create-group/create-group';
 import { GroupsList } from './components/groups-list/groups-list';
 import { GroupView } from './components/group-view/group-view';
 import { UsersManagement } from './components/users-management/users-management';
+import { CategoriesManagement } from './components/categories-management/categories-management';
+import { CreateCategory } from './components/create-category/create-category';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -26,6 +28,8 @@ export const routes: Routes = [
   { path: 'groups', component: GroupsList },
   { path: 'groups/:id', component: GroupView },
   { path: 'users', component: UsersManagement },
+  { path: 'categories', component: CategoriesManagement },
+  { path: 'create-category', component: CreateCategory },
   { path: 'login', component: Login },
   { path: 'register', component: Register }
 ];
