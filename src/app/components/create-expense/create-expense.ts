@@ -2,10 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ExpenseService } from '../../services/expense.service';
 import { CategoryService } from '../../services/category.service';
+import { GroupService } from '../../services/group.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { CategoryDto } from '../../models/category.model';
+import { GroupDto } from '../../models/group.model';
 
 @Component({
   selector: 'app-create-expense',
@@ -21,10 +23,13 @@ export class CreateExpense implements OnInit {
   successMessage = '';
   categories: CategoryDto[] = [];
   loadingCategories = false;
+  groups: GroupDto[] = [];
+  loadingGroups = false;
 
   constructor(
     private expenseService: ExpenseService, 
     private categoryService: CategoryService,
+    private groupService: GroupService,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -32,12 +37,14 @@ export class CreateExpense implements OnInit {
       description: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required]
+      categoryId: ['', Validators.required],
+      groupId: ['']
     });
   }
 
   ngOnInit() {
     this.loadCategories();
+    this.loadGroups();
   }
 
   loadCategories() {
@@ -50,6 +57,20 @@ export class CreateExpense implements OnInit {
       error: (err) => {
         console.error('Error al cargar categorías', err);
         this.loadingCategories = false;
+      }
+    });
+  }
+
+  loadGroups() {
+    this.loadingGroups = true;
+    this.groupService.getUserGroups().subscribe({
+      next: (groups) => {
+        this.groups = groups;
+        this.loadingGroups = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar grupos', err);
+        this.loadingGroups = false;
       }
     });
   }
