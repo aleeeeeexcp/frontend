@@ -1,0 +1,25 @@
+<div *ngIf="isOpen" class="dialog-backdrop" (click)="onBackdropClick()">
+  <div class="dialog-container" (click)="onDialogClick($event)" [class.danger]="type === 'danger'" [class.warning]="type === 'warning'" [class.info]="type === 'info'">
+    <div class="dialog-header">
+      <div class="dialog-icon">
+        <i *ngIf="type === 'danger'" class="bi bi-exclamation-triangle-fill"></i>
+        <i *ngIf="type === 'warning'" class="bi bi-exclamation-circle-fill"></i>
+        <i *ngIf="type === 'info'" class="bi bi-info-circle-fill"></i>
+      </div>
+      <h3>{{ title }}</h3>
+    </div>
+
+    <div class="dialog-body">
+      <p>{{ message }}</p>
+    </div>
+
+    <div class="dialog-actions">
+      <button class="btn btn-cancel" (click)="onCancel()">
+        {{ cancelText }}
+      </button>
+      <button class="btn btn-confirm" [class.danger]="type === 'danger'" [class.warning]="type === 'warning'" [class.info]="type === 'info'" (click)="onConfirm()">
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div>
