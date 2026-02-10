@@ -1,0 +1,119 @@
+<div class="group-view-container fade-in">
+  <div class="page-header">
+    <button class="btn-back" routerLink="/groups">
+      <i class="bi bi-arrow-left"></i> Grupos
+    </button>
+    <h1>
+      <i class="bi bi-people-fill"></i> Vista de Grupo
+    </h1>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  </div>
+
+  <!-- Summary Section -->
+  <div class="summary-section">
+    <div class="summary-card balance-card">
+      <div class="summary-icon">
+        <i class="bi bi-graph-up-arrow"></i>
+      </div>
+      <div class="summary-content">
+        <p class="summary-label">Balance del Grupo</p>
+        <h2 class="summary-value" [class.positive]="balance >= 0" [class.negative]="balance < 0">
+          ${{ balance | number:'1.2-2' }}
+        </h2>
+      </div>
+    </div>
+
+    <div class="summary-card income-card">
+      <div class="summary-icon">
+        <i class="bi bi-arrow-down-circle"></i>
+      </div>
+      <div class="summary-content">
+        <p class="summary-label">Ingresos del Grupo</p>
+        <h2 class="summary-value">${{ totalIncomes | number:'1.2-2' }}</h2>
+      </div>
+    </div>
+
+    <div class="summary-card expense-card">
+      <div class="summary-icon">
+        <i class="bi bi-arrow-up-circle"></i>
+      </div>
+      <div class="summary-content">
+        <p class="summary-label">Gastos del Grupo</p>
+        <h2 class="summary-value">${{ totalExpenses | number:'1.2-2' }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Grid -->
+  <div class="data-grid">
+    <!-- Expenses Section -->
+    <div class="data-section expense-section">
+      <div class="section-header">
+        <h3><i class="bi bi-wallet2"></i> Gastos del Grupo</h3>
+      </div>
+
+      <div *ngIf="loadingExpenses" class="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+
+      <div *ngIf="!loadingExpenses && !expenses.length" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <p>No hay gastos en este grupo</p>
+      </div>
+
+      <div *ngIf="!loadingExpenses && expenses.length" class="items-list">
+        <div *ngFor="let expense of expenses" class="item-card expense-item">
+          <div class="item-header">
+            <h4>{{ expense.description }}</h4>
+            <span class="item-amount expense-amount">${{ expense.amount }}</span>
+          </div>
+          <div class="item-footer">
+            <span class="item-date">
+              <i class="bi bi-calendar"></i> {{ expense.date | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Incomes Section -->
+    <div class="data-section income-section">
+      <div class="section-header">
+        <h3><i class="bi bi-cash-stack"></i> Ingresos del Grupo</h3>
+      </div>
+
+      <div *ngIf="loadingIncomes" class="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+
+      <div *ngIf="!loadingIncomes && !incomes.length" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <p>No hay ingresos en este grupo</p>
+      </div>
+
+      <div *ngIf="!loadingIncomes && incomes.length" class="items-list">
+        <div *ngFor="let income of incomes" class="item-card income-item">
+          <div class="item-header">
+            <h4>{{ income.description }}</h4>
+            <span class="item-amount income-amount">${{ income.amount }}</span>
+          </div>
+          <div class="item-footer">
+            <span class="item-date">
+              <i class="bi bi-calendar"></i> {{ income.date | date:'dd/MM/yyyy' }}
+            </span>
+            <span class="item-source">
+              <i class="bi bi-briefcase"></i> {{ income.source }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
