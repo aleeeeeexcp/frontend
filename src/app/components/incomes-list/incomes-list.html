@@ -13,21 +13,23 @@
     </button>
   </div>
 
-  <div *ngIf="incomes.length; else noIncomes" class="incomes-grid">
-    <div *ngFor="let income of incomes" class="income-card">
-      <div class="income-header">
-        <div>
-          <span class="income-label">{{ income.source }}</span>
-          <h3>{{ income.description }}</h3>
+  <div *ngIf="incomes().length; else noIncomes" class="incomes-grid">
+    @for (income of incomes(); track $index) {
+      <div class="income-card">
+        <div class="income-header">
+          <div>
+            <span class="income-label">{{ income.source }}</span>
+            <h3>{{ income.description }}</h3>
+          </div>
+          <span class="income-badge">${{ income.amount }}</span>
         </div>
-        <span class="income-badge">${{ income.amount }}</span>
+        <div class="income-footer">
+          <span class="income-date">
+            <i class="bi bi-calendar"></i> {{ income.date | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
       </div>
-      <div class="income-footer">
-        <span class="income-date">
-          <i class="bi bi-calendar"></i> {{ income.date | date:'dd/MM/yyyy' }}
-        </span>
-      </div>
-    </div>
+    }
   </div>
   
   <ng-template #noIncomes>

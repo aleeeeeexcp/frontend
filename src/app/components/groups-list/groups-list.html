@@ -14,18 +14,18 @@
     </div>
   </div>
 
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage() }}
   </div>
 
-  <div *ngIf="loading" class="loading-state">
+  <div *ngIf="loading()" class="loading-state">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
     <p>Cargando grupos...</p>
   </div>
 
-  <div *ngIf="!loading && !groups.length && !errorMessage" class="empty-state">
+  <div *ngIf="!loading() && !groups().length && !errorMessage()" class="empty-state">
     <i class="bi bi-inbox"></i>
     <h2>No tienes grupos</h2>
     <p>Crea tu primer grupo para colaborar con otros usuarios</p>
@@ -34,8 +34,8 @@
     </a>
   </div>
 
-  <div *ngIf="!loading && groups.length" class="groups-grid">
-    <div *ngFor="let group of groups" class="group-card" (click)="group.id && viewGroup(group.id)">
+  <div *ngIf="!loading() && groups().length" class="groups-grid">
+    <div *ngFor="let group of groups()" class="group-card" (click)="group.id && viewGroup(group.id)">
       <div class="group-header">
         <div class="group-icon">
           <i class="bi bi-people-fill"></i>

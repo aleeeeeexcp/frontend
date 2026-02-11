@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -16,19 +16,18 @@ import { UsersDto } from '../../models/user.model';
 })
 export class CreateGroup implements OnInit {
   groupForm: FormGroup;
-  users: UsersDto[] = [];
-  selectedUserIds: string[] = [];
-  loadingUsers = true;
-  successMessage = '';
-  errorMessage = '';
-  isSubmitting = false;
+  users = signal<UsersDto[]>([]);
+  selectedUserIds = signal<string[]>([]);
+  loadingUsers = signal(true);
+  successMessage = signal('');
+  errorMessage = signal('');
+  isSubmitting = signal(false);
 
   constructor(
     private fb: FormBuilder,
     private groupService: GroupService,
     private userService: UserService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) {
     this.groupForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -42,41 +41,40 @@ export class CreateGroup implements OnInit {
   }
 
   loadUsers() {
-    this.loadingUsers = true;
+    this.loadingUsers.set(true);
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        this.users = users || [];
-        this.loadingUsers = false;
-        this.cdr.detectChanges();
+        this.users.set(users || []);
+        this.loadingUsers.set(false);
       },
       error: (err) => {
         console.error('✗ Error al cargar usuarios:', err);
-        this.users = [];
-        this.loadingUsers = false;
-        this.cdr.detectChanges();
+        this.users.set([]);
+        this.loadingUsers.set(false);
       }
     });
   }
 
   toggleUserSelection(userId: string) {
-    const index = this.selectedUserIds.indexOf(userId);
+    const currentIds = this.selectedUserIds();
+    const index = currentIds.indexOf(userId);
     if (index > -1) {
-      this.selectedUserIds.splice(index, 1);
+      this.selectedUserIds.set(currentIds.filter(id => id !== userId));
     } else {
-      this.selectedUserIds.push(userId);
+      this.selectedUserIds.set([...currentIds, userId]);
     }
-    this.groupForm.patchValue({ memberIds: this.selectedUserIds });
+    this.groupForm.patchValue({ memberIds: this.selectedUserIds() });
   }
 
   isUserSelected(userId: string): boolean {
-    return this.selectedUserIds.includes(userId);
+    return this.selectedUserIds().includes(userId);
   }
 
   onSubmit() {
-    if (this.groupForm.valid && !this.isSubmitting) {
-      this.isSubmitting = true;
-      this.errorMessage = '';
-      this.successMessage = '';
+    if (this.groupForm.valid && !this.isSubmitting()) {
+      this.isSubmitting.set(true);
+      this.errorMessage.set('');
+      this.successMessage.set('');
 
       const groupData: GroupDto = {
         name: this.groupForm.value.name!,
@@ -87,19 +85,17 @@ export class CreateGroup implements OnInit {
       this.groupService.createGroup(groupData).subscribe({
         next: (response) => {
           console.log('✓ Grupo creado exitosamente:', response);
-          this.successMessage = 'Grupo creado exitosamente';
-          this.isSubmitting = false;
+          this.successMessage.set('Grupo creado exitosamente');
+          this.isSubmitting.set(false);
           this.groupForm.reset();
-          this.cdr.detectChanges();
 
           setTimeout(() => {
             this.router.navigate(['/dashboard']);
           }, 1500);
         },
         error: (error) => {
-          this.errorMessage = error.error?.message || 'Error al crear el grupo. Intenta nuevamente.';
-          this.isSubmitting = false;
-          this.cdr.detectChanges();
+          this.errorMessage.set(error.error?.message || 'Error al crear el grupo. Intenta nuevamente.');
+          this.isSubmitting.set(false);
         }
       });
     }

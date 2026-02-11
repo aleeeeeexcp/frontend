@@ -26,11 +26,8 @@ export class AuthService {
     return this.http.post<AuthenticatedUsersDto>(`${this.apiUrl}/login`, loginData)
       .pipe(
         tap(response => {
-          console.log('Auth Service - Response completa:', response);
-          console.log('Auth Service - roleType:', response.userDto.roleType);
           this.saveToken(response.serviceToken);
           this.saveUser(response.userDto);
-          console.log('Auth Service - Usuario guardado:', JSON.parse(localStorage.getItem('user') || '{}'));
         })
       );
   }

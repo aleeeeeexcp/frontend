@@ -9,12 +9,12 @@
   </div>
 
   <div class="form-container">
-    <div *ngIf="successMessage" class="alert alert-success">
-      <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+    <div *ngIf="successMessage()" class="alert alert-success">
+      <i class="bi bi-check-circle-fill"></i> {{ successMessage() }}
     </div>
     
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+    <div *ngIf="errorMessage()" class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage() }}
     </div>
 
     <form [formGroup]="groupForm" (ngSubmit)="onSubmit()" class="group-form">
@@ -56,14 +56,14 @@
         </label>
         <p class="help-text">Selecciona los usuarios que quieres agregar al grupo</p>
         
-        <div *ngIf="loadingUsers" class="loading-users">
+        <div *ngIf="loadingUsers()" class="loading-users">
           <div class="spinner-border spinner-border-sm text-primary"></div>
           <span>Cargando usuarios...</span>
         </div>
 
-        <div *ngIf="!loadingUsers && users.length" class="users-selector">
+        <div *ngIf="!loadingUsers() && users().length" class="users-selector">
           <div 
-            *ngFor="let user of users" 
+            *ngFor="let user of users()" 
             class="user-option"
             [class.selected]="isUserSelected(user.id || '')"
             (click)="toggleUserSelection(user.id || '')">
@@ -80,26 +80,26 @@
           </div>
         </div>
 
-        <div *ngIf="!loadingUsers && !users.length" class="no-users">
+        <div *ngIf="!loadingUsers() && !users().length" class="no-users">
           <i class="bi bi-inbox"></i>
           <p>No hay usuarios disponibles</p>
         </div>
 
-        <div *ngIf="selectedUserIds.length" class="selected-count">
+        <div *ngIf="selectedUserIds().length" class="selected-count">
           <i class="bi bi-check2-circle"></i>
-          {{ selectedUserIds.length }} usuario(s) seleccionado(s)
+          {{ selectedUserIds().length }} usuario(s) seleccionado(s)
         </div>
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-secondary" routerLink="/dashboard" [disabled]="isSubmitting">
+        <button type="button" class="btn btn-secondary" routerLink="/dashboard" [disabled]="isSubmitting()">
           Cancelar
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="groupForm.invalid || isSubmitting">
-          <span *ngIf="!isSubmitting">
+        <button type="submit" class="btn btn-primary" [disabled]="groupForm.invalid || isSubmitting()">
+          <span *ngIf="!isSubmitting()">
             <i class="bi bi-plus-circle"></i> Crear Grupo
           </span>
-          <span *ngIf="isSubmitting">
+          <span *ngIf="isSubmitting()">
             <span class="spinner-border spinner-border-sm me-2"></span> Creando...
           </span>
         </button>

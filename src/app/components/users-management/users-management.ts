@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UsersDto } from '../../models/user.model';
@@ -13,17 +13,23 @@ import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
   styleUrls: ['./users-management.css'],
 })
 export class UsersManagement implements OnInit {
-  users: UsersDto[] = [];
-  loading = true;
-  successMessage = '';
-  errorMessage = '';
+  users = signal<UsersDto[]>([]);
+  loading = signal(true);
+  successMessage = signal('');
+  errorMessage = signal('');
   
-  showDeleteDialog = false;
-  userToDelete: { id: string; username: string } | null = null;
+  showDeleteDialog = signal(false);
+  userToDelete = signal<{ id: string; username: string } | null>(null);
+
+  deleteMessage = computed(() => {
+    const user = this.userToDelete();
+    return user 
+      ? `¿Estás seguro de eliminar el usuario "${user.username}"? Esta acción no se puede deshacer.`
+      : '';
+  });
 
   constructor(
-    private userService: UserService,
-    private cdr: ChangeDetectorRef
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -31,54 +37,47 @@ export class UsersManagement implements OnInit {
   }
 
   loadUsers() {
-    this.loading = true;
+    this.loading.set(true);
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        this.users = users || [];
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.users.set(users || []);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error al cargar usuarios:', err);
-        this.users = [];
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.users.set([]);
+        this.loading.set(false);
       }
     });
   }
 
   deleteUser(userId: string, username: string) {
-    this.userToDelete = { id: userId, username: username };
-    this.showDeleteDialog = true;
+    this.userToDelete.set({ id: userId, username: username });
+    this.showDeleteDialog.set(true);
   }
 
   confirmDelete() {
-    if (this.userToDelete) {
-      this.userService.deleteUser(this.userToDelete.id).subscribe({
+    const user = this.userToDelete();
+    if (user) {
+      this.userService.deleteUser(user.id).subscribe({
         next: () => {
-          this.successMessage = 'Usuario eliminado correctamente';
+          this.successMessage.set('Usuario eliminado correctamente');
           this.loadUsers();
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => this.successMessage.set(''), 3000);
         },
         error: (err) => {
           console.error('Error al eliminar usuario:', err);
-          this.errorMessage = 'Error al eliminar el usuario';
-          setTimeout(() => this.errorMessage = '', 3000);
+          this.errorMessage.set('Error al eliminar el usuario');
+          setTimeout(() => this.errorMessage.set(''), 3000);
         }
       });
     }
-    this.showDeleteDialog = false;
-    this.userToDelete = null;
+    this.showDeleteDialog.set(false);
+    this.userToDelete.set(null);
   }
 
   cancelDelete() {
-    this.showDeleteDialog = false;
-    this.userToDelete = null;
-  }
-
-  get deleteMessage(): string {
-    return this.userToDelete 
-      ? `¿Estás seguro de eliminar el usuario "${this.userToDelete.username}"? Esta acción no se puede deshacer.`
-      : '';
+    this.showDeleteDialog.set(false);
+    this.userToDelete.set(null);
   }
 }

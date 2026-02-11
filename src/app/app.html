@@ -8,15 +8,21 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item user-info">
-          <span class="user-name">
+        <li class="nav-item dropdown" [class.show]="isDropdownOpen">
+          <button class="user-dropdown-btn" (click)="toggleDropdown()" type="button">
             <i class="bi bi-person-circle"></i> {{ authService.getUser()?.username }}
-          </span>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-outline-light btn-sm" (click)="logout()">
-            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            <i class="bi bi-chevron-down dropdown-arrow"></i>
           </button>
+          <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">
+            <li>
+              <button class="dropdown-item" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+              </button>
+              <button class="dropdown-item" >
+                <i class="bi bi-person"></i> Perfil
+              </button> 
+            </li>
+          </ul>
         </li>
       </ul>
     </div>

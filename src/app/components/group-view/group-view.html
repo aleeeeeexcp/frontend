@@ -8,8 +8,8 @@
     </h1>
   </div>
 
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage() }}
   </div>
 
   <!-- Summary Section -->
@@ -20,8 +20,8 @@
       </div>
       <div class="summary-content">
         <p class="summary-label">Balance del Grupo</p>
-        <h2 class="summary-value" [class.positive]="balance >= 0" [class.negative]="balance < 0">
-          ${{ balance | number:'1.2-2' }}
+        <h2 class="summary-value" [class.positive]="balance() >= 0" [class.negative]="balance() < 0">
+          ${{ balance() | number:'1.2-2' }}
         </h2>
       </div>
     </div>
@@ -32,7 +32,7 @@
       </div>
       <div class="summary-content">
         <p class="summary-label">Ingresos del Grupo</p>
-        <h2 class="summary-value">${{ totalIncomes | number:'1.2-2' }}</h2>
+        <h2 class="summary-value">${{ totalIncomes() | number:'1.2-2' }}</h2>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
       </div>
       <div class="summary-content">
         <p class="summary-label">Gastos del Grupo</p>
-        <h2 class="summary-value">${{ totalExpenses | number:'1.2-2' }}</h2>
+        <h2 class="summary-value">${{ totalExpenses() | number:'1.2-2' }}</h2>
       </div>
     </div>
   </div>
@@ -55,19 +55,19 @@
         <h3><i class="bi bi-wallet2"></i> Gastos del Grupo</h3>
       </div>
 
-      <div *ngIf="loadingExpenses" class="loading">
+      <div *ngIf="loadingExpenses()" class="loading">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
 
-      <div *ngIf="!loadingExpenses && !expenses.length" class="empty-state">
+      <div *ngIf="!loadingExpenses() && !expenses().length" class="empty-state">
         <i class="bi bi-inbox"></i>
         <p>No hay gastos en este grupo</p>
       </div>
 
-      <div *ngIf="!loadingExpenses && expenses.length" class="items-list">
-        <div *ngFor="let expense of expenses" class="item-card expense-item">
+      <div *ngIf="!loadingExpenses() && expenses().length" class="items-list">
+        <div *ngFor="let expense of expenses()" class="item-card expense-item">
           <div class="item-header">
             <h4>{{ expense.description }}</h4>
             <span class="item-amount expense-amount">${{ expense.amount }}</span>
@@ -87,19 +87,19 @@
         <h3><i class="bi bi-cash-stack"></i> Ingresos del Grupo</h3>
       </div>
 
-      <div *ngIf="loadingIncomes" class="loading">
+      <div *ngIf="loadingIncomes()" class="loading">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
 
-      <div *ngIf="!loadingIncomes && !incomes.length" class="empty-state">
+      <div *ngIf="!loadingIncomes() && !incomes().length" class="empty-state">
         <i class="bi bi-inbox"></i>
         <p>No hay ingresos en este grupo</p>
       </div>
 
-      <div *ngIf="!loadingIncomes && incomes.length" class="items-list">
-        <div *ngFor="let income of incomes" class="item-card income-item">
+      <div *ngIf="!loadingIncomes() && incomes().length" class="items-list">
+        <div *ngFor="let income of incomes()" class="item-card income-item">
           <div class="item-header">
             <h4>{{ income.description }}</h4>
             <span class="item-amount income-amount">${{ income.amount }}</span>

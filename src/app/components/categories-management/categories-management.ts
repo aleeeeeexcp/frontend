@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CategoryDto } from '../../models/category.model';
@@ -13,17 +13,23 @@ import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
   styleUrls: ['./categories-management.css'],
 })
 export class CategoriesManagement implements OnInit {
-  categories: CategoryDto[] = [];
-  loading = true;
-  successMessage = '';
-  errorMessage = '';
+  categories = signal<CategoryDto[]>([]);
+  loading = signal(true);
+  successMessage = signal('');
+  errorMessage = signal('');
   
-  showDeleteDialog = false;
-  categoryToDelete: { id: string; name: string } | null = null;
+  showDeleteDialog = signal(false);
+  categoryToDelete = signal<{ id: string; name: string } | null>(null);
+
+  deleteMessage = computed(() => {
+    const category = this.categoryToDelete();
+    return category 
+      ? `¿Estás seguro de eliminar la categoría "${category.name}"? Esta acción no se puede deshacer.`
+      : '';
+  });
 
   constructor(
-    private categoryService: CategoryService,
-    private cdr: ChangeDetectorRef
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
@@ -31,54 +37,47 @@ export class CategoriesManagement implements OnInit {
   }
 
   loadCategories() {
-    this.loading = true;
+    this.loading.set(true);
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
-        this.categories = categories || [];
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.categories.set(categories || []);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error al cargar categorías:', err);
-        this.categories = [];
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.categories.set([]);
+        this.loading.set(false);
       }
     });
   }
 
   deleteCategory(categoryId: string, categoryName: string) {
-    this.categoryToDelete = { id: categoryId, name: categoryName };
-    this.showDeleteDialog = true;
+    this.categoryToDelete.set({ id: categoryId, name: categoryName });
+    this.showDeleteDialog.set(true);
   }
 
   confirmDelete() {
-    if (this.categoryToDelete) {
-      this.categoryService.deleteCategory(this.categoryToDelete.id).subscribe({
+    const category = this.categoryToDelete();
+    if (category) {
+      this.categoryService.deleteCategory(category.id).subscribe({
         next: () => {
-          this.successMessage = 'Categoría eliminada correctamente';
+          this.successMessage.set('Categoría eliminada correctamente');
           this.loadCategories();
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => this.successMessage.set(''), 3000);
         },
         error: (err) => {
           console.error('Error al eliminar categoría:', err);
-          this.errorMessage = 'Error al eliminar la categoría';
-          setTimeout(() => this.errorMessage = '', 3000);
+          this.errorMessage.set('Error al eliminar la categoría');
+          setTimeout(() => this.errorMessage.set(''), 3000);
         }
       });
     }
-    this.showDeleteDialog = false;
-    this.categoryToDelete = null;
+    this.showDeleteDialog.set(false);
+    this.categoryToDelete.set(null);
   }
 
   cancelDelete() {
-    this.showDeleteDialog = false;
-    this.categoryToDelete = null;
-  }
-
-  get deleteMessage(): string {
-    return this.categoryToDelete 
-      ? `¿Estás seguro de eliminar la categoría "${this.categoryToDelete.name}"? Esta acción no se puede deshacer.`
-      : '';
+    this.showDeleteDialog.set(false);
+    this.categoryToDelete.set(null);
   }
 }

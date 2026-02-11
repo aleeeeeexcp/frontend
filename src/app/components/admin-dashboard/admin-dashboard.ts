@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -14,16 +14,23 @@ import { CategoryDto } from '../../models/category.model';
   styleUrls: ['./admin-dashboard.css'],
 })
 export class AdminDashboard implements OnInit {
-  users: UsersDto[] = [];
-  categories: CategoryDto[] = [];
+  users = signal<UsersDto[]>([]);
+  categories = signal<CategoryDto[]>([]);
   
-  loadingUsers = true;
-  loadingCategories = true;
+  loadingUsers = signal(true);
+  loadingCategories = signal(true);
+
+  adminCount = computed(() => 
+    this.users().filter(u => u.roleType === 'ADMIN').length
+  );
+
+  userCount = computed(() => 
+    this.users().filter(u => u.roleType !== 'ADMIN').length
+  );
 
   constructor(
     private userService: UserService,
-    private categoryService: CategoryService,
-    private cdr: ChangeDetectorRef
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
@@ -32,44 +39,32 @@ export class AdminDashboard implements OnInit {
   }
 
   loadUsers() {
-    this.loadingUsers = true;
+    this.loadingUsers.set(true);
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        this.users = users || [];
-        this.loadingUsers = false;
-        this.cdr.detectChanges();
+        this.users.set(users || []);
+        this.loadingUsers.set(false);
       },
       error: (err) => {
         console.error('✗ Error al cargar usuarios:', err);
-        this.users = [];
-        this.loadingUsers = false;
-        this.cdr.detectChanges();
+        this.users.set([]);
+        this.loadingUsers.set(false);
       }
     });
   }
 
   loadCategories() {
-    this.loadingCategories = true;
+    this.loadingCategories.set(true);
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
-        this.categories = categories || [];
-        this.loadingCategories = false;
-        this.cdr.detectChanges();
+        this.categories.set(categories || []);
+        this.loadingCategories.set(false);
       },
       error: (err) => {
         console.error('✗ Error al cargar categorías:', err);
-        this.categories = [];
-        this.loadingCategories = false;
-        this.cdr.detectChanges();
+        this.categories.set([]);
+        this.loadingCategories.set(false);
       }
     });
-  }
-
-  get adminCount(): number {
-    return this.users.filter(u => u.roleType === 'ADMIN').length;
-  }
-
-  get userCount(): number {
-    return this.users.filter(u => u.roleType !== 'ADMIN').length;
   }
 }

@@ -61,11 +61,11 @@
   font-size: 1.1rem;
 }
 
-.user-info {
-  margin-right: 0;
+.nav-item.dropdown {
+  position: relative;
 }
 
-.user-name {
+.user-dropdown-btn {
   color: #2d3748;
   font-weight: 600;
   font-size: 1rem;
@@ -74,13 +74,74 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: none;
   border-radius: 20px;
   white-space: nowrap;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.user-name i {
+.user-dropdown-btn:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  color: #667eea;
+}
+
+.user-dropdown-btn i.bi-person-circle {
   font-size: 1.25rem;
   color: #667eea;
+}
+
+.dropdown-arrow {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown.show .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: none;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  background: white;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  color: #667eea;
+}
+
+.dropdown-item i {
+  font-size: 1.1rem;
 }
 
 .btn-outline-light {

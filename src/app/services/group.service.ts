@@ -56,4 +56,11 @@ export class GroupService {
       { headers: this.getHeaders() }
     );
   }
+
+  deleteGroup(groupId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${groupId}`,
+      { headers: this.getHeaders() }
+    );
+  }
 }

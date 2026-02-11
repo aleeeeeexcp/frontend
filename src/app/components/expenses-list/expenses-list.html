@@ -13,7 +13,7 @@
     </button>
   </div>
 
-  <div *ngIf="expenses.length || selectedCategoryId" class="filters-section">
+  <div *ngIf="expenses().length || selectedCategoryId()" class="filters-section">
     <div class="filter-group">
       <label for="categoryFilter" class="filter-label">
         <i class="bi bi-funnel"></i> Filtrar por categoría:
@@ -21,36 +21,36 @@
       <select 
         id="categoryFilter"
         class="form-select category-select" 
-        [(ngModel)]="selectedCategoryId" 
-        (change)="onCategoryChange()">
+        [value]="selectedCategoryId()"
+        (change)="onCategoryChange($any($event.target).value)">
         <option value="">Todas las categorías</option>
-        <option *ngFor="let category of categories" [value]="category.id">
+        <option *ngFor="let category of categories()" [value]="category.id">
           {{ category.name }}
         </option>
       </select>
     </div>
 
-    <div class="sort-controls" *ngIf="expenses.length">
+    <div class="sort-controls" *ngIf="expenses().length">
       <span class="sort-label">Ordenar por:</span>
       <button 
         class="btn-sort"
-        [class.active]="sortBy === 'date'"
+        [class.active]="sortBy() === 'date'"
         (click)="sortByDate()">
         <i class="bi bi-calendar"></i> Fecha
-        <i class="bi bi-arrow-down" *ngIf="sortBy === 'date'"></i>
+        <i class="bi bi-arrow-down" *ngIf="sortBy() === 'date'"></i>
       </button>
       <button 
         class="btn-sort"
-        [class.active]="sortBy === 'amount'"
+        [class.active]="sortBy() === 'amount'"
         (click)="sortByAmount()">
         <i class="bi bi-cash"></i> Precio
-        <i class="bi bi-arrow-down" *ngIf="sortBy === 'amount'"></i>
+        <i class="bi bi-arrow-down" *ngIf="sortBy() === 'amount'"></i>
       </button>
     </div>
   </div>
 
-  <div *ngIf="expenses.length; else noExpenses" class="expenses-grid">
-    <div *ngFor="let expense of expenses" class="expense-card">
+  <div *ngIf="expenses().length; else noExpenses" class="expenses-grid">
+    <div *ngFor="let expense of expenses()" class="expense-card">
       <div class="expense-header">
         <h3>{{ expense.description }}</h3>
         <span class="expense-badge">${{ expense.amount }}</span>

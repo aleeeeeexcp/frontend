@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { IncomeDto } from '../../models/income.model';
@@ -13,12 +13,11 @@ import { IncomeService } from '../../services/income.service';
 })
 
 export class IncomesList implements OnInit {
-  incomes: IncomeDto[] = [];
-  loading = true;
+  incomes = signal<IncomeDto[]>([]);
+  loading = signal(true);
 
   constructor(
-    private incomeService: IncomeService,
-    private cdr: ChangeDetectorRef
+    private incomeService: IncomeService
   ) {}
 
   ngOnInit() {
@@ -26,18 +25,16 @@ export class IncomesList implements OnInit {
   }
 
   loadIncomes() {
-    this.loading = true;
+    this.loading.set(true);
     this.incomeService.getAllUsersIncomes().subscribe({
       next: (incomes) => {
-        this.incomes = incomes || [];
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.incomes.set(incomes || []);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error al cargar ingresos en lista:', err);
-        this.incomes = [];
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.incomes.set([]);
+        this.loading.set(false);
       }
     }); 
   }

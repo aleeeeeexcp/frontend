@@ -10,22 +10,22 @@
     </div>
   </div>
 
-  <div *ngIf="successMessage" class="alert alert-success">
-    <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+  <div *ngIf="successMessage()" class="alert alert-success">
+    <i class="bi bi-check-circle-fill"></i> {{ successMessage() }}
   </div>
 
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage() }}
   </div>
 
-  <div *ngIf="loading" class="loading-state">
+  <div *ngIf="loading()" class="loading-state">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
     <p>Cargando usuarios...</p>
   </div>
 
-  <div *ngIf="!loading && users.length" class="users-table-container">
+  <div *ngIf="!loading() && users().length" class="users-table-container">
     <table class="users-table">
       <thead>
         <tr>
@@ -36,7 +36,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users()">
           <td class="user-name">{{ user.username }}</td>
           <td class="user-email">{{ user.email }}</td>
           <td>
@@ -57,16 +57,16 @@
     </table>
   </div>
 
-  <div *ngIf="!loading && !users.length" class="empty-state">
+  <div *ngIf="!loading() && !users().length" class="empty-state">
     <i class="bi bi-people"></i>
     <h3>No hay usuarios en el sistema</h3>
   </div>
 
   <!-- Dialog de confirmación -->
   <app-confirm-dialog
-    [isOpen]="showDeleteDialog"
+    [isOpen]="showDeleteDialog()"
     title="Eliminar Usuario"
-    [message]="deleteMessage"
+    [message]="deleteMessage()"
     confirmText="Eliminar"
     cancelText="Cancelar"
     type="danger"

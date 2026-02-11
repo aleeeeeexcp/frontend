@@ -1,9 +1,9 @@
 <div class="dashboard-container fade-in">
-  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
-    {{ successMessage }}
+  <div *ngIf="successMessage()" class="alert alert-success alert-dismissible fade show">
+    {{ successMessage() }}
   </div>
-  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show">
-    {{ errorMessage }}
+  <div *ngIf="errorMessage()" class="alert alert-danger alert-dismissible fade show">
+    {{ errorMessage() }}
   </div>
 
   <div class="summary-section">
@@ -13,8 +13,8 @@
       </div>
       <div class="summary-content">
         <p class="summary-label">Balance</p>
-        <h2 class="summary-value" [class.positive]="balance >= 0" [class.negative]="balance < 0">
-          ${{ balance | number:'1.2-2' }}
+        <h2 class="summary-value" [class.positive]="balance() >= 0" [class.negative]="balance() < 0">
+          ${{ balance() | number:'1.2-2' }}
         </h2>
       </div>
     </div>
@@ -25,7 +25,7 @@
       </div>
       <div class="summary-content">
         <p class="summary-label">Ingresos Totales</p>
-        <h2 class="summary-value">${{ totalIncomes | number:'1.2-2' }}</h2>
+        <h2 class="summary-value">${{ totalIncomes() | number:'1.2-2' }}</h2>
       </div>
     </div>
 
@@ -35,7 +35,7 @@
       </div>
       <div class="summary-content">
         <p class="summary-label">Gastos Totales</p>
-        <h2 class="summary-value">${{ totalExpenses | number:'1.2-2' }}</h2>
+        <h2 class="summary-value">${{ totalExpenses() | number:'1.2-2' }}</h2>
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <i class="bi bi-people-fill"></i> Crear Grupo
     </button>
   </div>
-  <div *ngIf="showExpenseForm" class="form-modal">
+  <div *ngIf="showExpenseForm()" class="form-modal">
     <div class="form-card expense-form">
       <div class="form-header">
         <h3><i class="bi bi-wallet2"></i> Crear Nuevo Gasto</h3>
@@ -75,14 +75,14 @@
           <label for="expense-category" class="form-label">Categoría</label>
           <select id="expense-category" formControlName="categoryId" class="form-select">
             <option value="" disabled selected>Seleccionar categoría</option>
-            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            <option *ngFor="let category of categories()" [value]="category.id">{{ category.name }}</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="expense-group" class="form-label">Grupo (Opcional)</label>
           <select id="expense-group" formControlName="groupId" class="form-select">
             <option value="">Sin grupo</option>
-            <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
+            <option *ngFor="let group of groups()" [value]="group.id">{{ group.name }}</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary w-100" [disabled]="expenseForm.invalid">
@@ -91,7 +91,7 @@
       </form>
     </div>
   </div>
-  <div *ngIf="showIncomeForm" class="form-modal">
+  <div *ngIf="showIncomeForm()" class="form-modal">
     <div class="form-card income-form">
       <div class="form-header">
         <h3><i class="bi bi-cash-stack"></i> Crear Nuevo Ingreso</h3>
@@ -120,7 +120,7 @@
           <label for="income-group" class="form-label">Grupo (Opcional)</label>
           <select id="income-group" formControlName="groupId" class="form-select">
             <option value="">Sin grupo</option>
-            <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
+            <option *ngFor="let group of groups()" [value]="group.id">{{ group.name }}</option>
           </select>
         </div>
         <button type="submit" class="btn btn-success w-100" [disabled]="incomeForm.invalid">
@@ -137,13 +137,13 @@
           <i class="bi bi-box-arrow-up-right"></i>
         </a>
       </div>
-      <div *ngIf="loadingExpenses" class="loading">
+      <div *ngIf="loadingExpenses()" class="loading">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
-      <div *ngIf="!loadingExpenses && expenses.length" class="items-list">
-        <div *ngFor="let expense of displayedExpenses" class="item-card expense-item">
+      <div *ngIf="!loadingExpenses() && expenses().length" class="items-list">
+        <div *ngFor="let expense of displayedExpenses()" class="item-card expense-item">
           <div class="item-header">
             <h4>{{ expense.description }}</h4>
             <span class="item-amount expense-amount">${{ expense.amount }}</span>
@@ -158,7 +158,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!loadingExpenses && !expenses.length" class="empty-message">
+      <div *ngIf="!loadingExpenses() && !expenses().length" class="empty-message">
         <i class="bi bi-inbox"></i>
         <p>No hay gastos registrados</p>
       </div>
@@ -170,13 +170,13 @@
           <i class="bi bi-box-arrow-up-right"></i>
         </a>
       </div>
-      <div *ngIf="loadingIncomes" class="loading">
+      <div *ngIf="loadingIncomes()" class="loading">
         <div class="spinner-border text-success" role="status">
           <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
-      <div *ngIf="!loadingIncomes && incomes.length" class="items-list">
-        <div *ngFor="let income of displayedIncomes" class="item-card income-item">
+      <div *ngIf="!loadingIncomes() && incomes().length" class="items-list">
+        <div *ngFor="let income of displayedIncomes()" class="item-card income-item">
           <div class="item-header">
             <div>
               <span class="item-source">{{ income.source }}</span>
@@ -191,7 +191,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!loadingIncomes && !incomes.length" class="empty-message">
+      <div *ngIf="!loadingIncomes() && !incomes().length" class="empty-message">
         <i class="bi bi-inbox"></i>
         <p>No hay ingresos registrados</p>
       </div>
@@ -203,13 +203,13 @@
           <i class="bi bi-box-arrow-up-right"></i>
         </a>
       </div>
-      <div *ngIf="loadingGroups" class="loading">
+      <div *ngIf="loadingGroups()" class="loading">
         <div class="spinner-border text-info" role="status">
           <span class="visually-hidden">Cargando...</span>
         </div>
       </div>
-      <div *ngIf="!loadingGroups && groups.length" class="items-list">
-        <div *ngFor="let group of displayedGroups" class="item-card group-item">
+      <div *ngIf="!loadingGroups() && groups().length" class="items-list">
+        <div *ngFor="let group of displayedGroups()" class="item-card group-item">
           <div class="item-header">
             <h4>{{ group.name }}</h4>
             <span class="item-members">
@@ -221,7 +221,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!loadingGroups && !groups.length" class="empty-message">
+      <div *ngIf="!loadingGroups() && !groups().length" class="empty-message">
         <i class="bi bi-inbox"></i>
         <p>No hay grupos registrados</p>
       </div>

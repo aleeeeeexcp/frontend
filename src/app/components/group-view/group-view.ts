@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GroupService } from '../../services/group.service';
@@ -14,23 +14,35 @@ import { GroupDto } from '../../models/group.model';
   styleUrls: ['./group-view.css'],
 })
 export class GroupView implements OnInit {
-  groupId: string = '';
-  group: GroupDto | null = null;
-  expenses: ExpenseDto[] = [];
-  incomes: IncomeDto[] = [];
-  loadingExpenses = true;
-  loadingIncomes = true;
-  errorMessage = '';
+  groupId = signal('');
+  group = signal<GroupDto | null>(null);
+  expenses = signal<ExpenseDto[]>([]);
+  incomes = signal<IncomeDto[]>([]);
+  loadingExpenses = signal(true);
+  loadingIncomes = signal(true);
+  errorMessage = signal('');
+
+  totalExpenses = computed(() => 
+    this.expenses().reduce((sum, exp) => sum + exp.amount, 0)
+  );
+
+  totalIncomes = computed(() => 
+    this.incomes().reduce((sum, inc) => sum + inc.amount, 0)
+  );
+
+  balance = computed(() => 
+    this.totalIncomes() - this.totalExpenses()
+  );
 
   constructor(
     private route: ActivatedRoute,
-    private groupService: GroupService,
-    private cdr: ChangeDetectorRef
+    private groupService: GroupService
   ) {}
 
   ngOnInit() {
-    this.groupId = this.route.snapshot.paramMap.get('id') || '';
-    if (this.groupId) {
+    const id = this.route.snapshot.paramMap.get('id') || '';
+    this.groupId.set(id);
+    if (id) {
       this.loadGroupData();
     }
   }
@@ -41,50 +53,34 @@ export class GroupView implements OnInit {
   }
 
   loadExpenses() {
-    this.loadingExpenses = true;
-    this.groupService.getExpensesByGroup(this.groupId).subscribe({
+    this.loadingExpenses.set(true);
+    this.groupService.getExpensesByGroup(this.groupId()).subscribe({
       next: (expenses) => {
-        this.expenses = expenses || [];
-        this.loadingExpenses = false;
-        this.cdr.detectChanges();
+        this.expenses.set(expenses || []);
+        this.loadingExpenses.set(false);
       },
       error: (err) => {
         console.error('Error al cargar gastos del grupo:', err);
-        this.errorMessage = 'Error al cargar gastos del grupo';
-        this.expenses = [];
-        this.loadingExpenses = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Error al cargar gastos del grupo');
+        this.expenses.set([]);
+        this.loadingExpenses.set(false);
       }
     });
   }
 
   loadIncomes() {
-    this.loadingIncomes = true;
-    this.groupService.getIncomesByGroup(this.groupId).subscribe({
+    this.loadingIncomes.set(true);
+    this.groupService.getIncomesByGroup(this.groupId()).subscribe({
       next: (incomes) => {
-        this.incomes = incomes || [];
-        this.loadingIncomes = false;
-        this.cdr.detectChanges();
+        this.incomes.set(incomes || []);
+        this.loadingIncomes.set(false);
       },
       error: (err) => {
         console.error('Error al cargar ingresos del grupo:', err);
-        this.errorMessage = 'Error al cargar ingresos del grupo';
-        this.incomes = [];
-        this.loadingIncomes = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Error al cargar ingresos del grupo');
+        this.incomes.set([]);
+        this.loadingIncomes.set(false);
       }
     });
-  }
-
-  get totalExpenses(): number {
-    return this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  }
-
-  get totalIncomes(): number {
-    return this.incomes.reduce((sum, inc) => sum + inc.amount, 0);
-  }
-
-  get balance(): number {
-    return this.totalIncomes - this.totalExpenses;
   }
 }

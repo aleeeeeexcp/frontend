@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ExpenseService } from '../../services/expense.service';
@@ -20,32 +20,55 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 
 export class DashboardComponent implements OnInit {
-  expenses: ExpenseDto[] = [];
-  incomes: IncomeDto[] = [];
-  categories: CategoryDto[] = [];
-  groups: GroupDto[] = [];
+  expenses = signal<ExpenseDto[]>([]);
+  incomes = signal<IncomeDto[]>([]);
+  categories = signal<CategoryDto[]>([]);
+  groups = signal<GroupDto[]>([]);
   
-  loadingExpenses = true;
-  loadingIncomes = true;
-  loadingCategories = true;
-  loadingGroups = true;
+  loadingExpenses = signal(true);
+  loadingIncomes = signal(true);
+  loadingCategories = signal(true);
+  loadingGroups = signal(true);
   
-  showExpenseForm = false;
-  showIncomeForm = false;
+  showExpenseForm = signal(false);
+  showIncomeForm = signal(false);
   
   expenseForm: FormGroup;
   incomeForm: FormGroup;
   
-  successMessage = '';
-  errorMessage = '';
+  successMessage = signal('');
+  errorMessage = signal('');
+
+  totalExpenses = computed(() => 
+    this.expenses().reduce((sum, exp) => sum + exp.amount, 0)
+  );
+
+  totalIncomes = computed(() => 
+    this.incomes().reduce((sum, inc) => sum + inc.amount, 0)
+  );
+
+  balance = computed(() => 
+    this.totalIncomes() - this.totalExpenses()
+  );
+
+  displayedExpenses = computed(() => 
+    this.expenses().slice(0, 3)
+  );
+
+  displayedIncomes = computed(() => 
+    this.incomes().slice(0, 3)
+  );
+
+  displayedGroups = computed(() => 
+    this.groups().slice(0, 3)
+  );
 
   constructor(
     private expenseService: ExpenseService,
     private incomeService: IncomeService,
     private groupService: GroupService,
     private categoryService: CategoryService,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private fb: FormBuilder
   ) {
     this.expenseForm = this.fb.group({
       description: ['', Validators.required],
@@ -72,116 +95,84 @@ export class DashboardComponent implements OnInit {
   }
 
   loadExpenses() {
-    this.loadingExpenses = true;
+    this.loadingExpenses.set(true);
 
     this.expenseService.getAllUsersExpenses().subscribe({
       next: (expenses) => {
-        this.expenses = expenses || [];
-        this.loadingExpenses = false;
-        this.cdr.detectChanges();
+        this.expenses.set(expenses || []);
+        this.loadingExpenses.set(false);
       },
       error: (err) => {
-        this.errorMessage = `Error al cargar gastos: ${err.status === 0 ? 'Backend no disponible' : err.message}`;
-        this.expenses = [];
-        this.loadingExpenses = false;
-        this.cdr.detectChanges();
-        setTimeout(() => this.errorMessage = '', 5000);
+        this.errorMessage.set(`Error al cargar gastos: ${err.status === 0 ? 'Backend no disponible' : err.message}`);
+        this.expenses.set([]);
+        this.loadingExpenses.set(false);
+        setTimeout(() => this.errorMessage.set(''), 5000);
       }
     });
   }
 
   loadIncomes() {
-    this.loadingIncomes = true;
+    this.loadingIncomes.set(true);
     this.incomeService.getAllUsersIncomes().subscribe({
       next: (incomes) => {
-        this.incomes = incomes || [];
-        this.loadingIncomes = false;
-        this.cdr.detectChanges();
+        this.incomes.set(incomes || []);
+        this.loadingIncomes.set(false);
       },
       error: (err) => {
-        this.errorMessage = `Error al cargar ingresos: ${err.status === 0 ? 'Backend no disponible' : err.message}`;
-        this.incomes = [];
-        this.loadingIncomes = false;
-        this.cdr.detectChanges();
-        setTimeout(() => this.errorMessage = '', 5000);
+        this.errorMessage.set(`Error al cargar ingresos: ${err.status === 0 ? 'Backend no disponible' : err.message}`);
+        this.incomes.set([]);
+        this.loadingIncomes.set(false);
+        setTimeout(() => this.errorMessage.set(''), 5000);
       }
     });
   }
 
   loadCategories() {
-    this.loadingCategories = true;
+    this.loadingCategories.set(true);
     
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
-        this.categories = categories || [];
-        this.loadingCategories = false;
-        this.cdr.detectChanges();
+        this.categories.set(categories || []);
+        this.loadingCategories.set(false);
       },
       error: (err) => {
-        this.errorMessage = `Error al cargar categorías: ${err.status === 0 ? 'Backend no disponible' : err.message}`;
-        this.categories = [];
-        this.loadingCategories = false;
-        this.cdr.detectChanges();
-        setTimeout(() => this.errorMessage = '', 5000);
+        this.errorMessage.set(`Error al cargar categorías: ${err.status === 0 ? 'Backend no disponible' : err.message}`);
+        this.categories.set([]);
+        this.loadingCategories.set(false);
+        setTimeout(() => this.errorMessage.set(''), 5000);
       }
     });
   }
 
   loadGroups() {
-    this.loadingGroups = true;
+    this.loadingGroups.set(true);
     
     this.groupService.getAllGroups().subscribe({
       next: (groups) => {
-        this.groups = groups || [];
-        this.loadingGroups = false;
-        this.cdr.detectChanges();
+        this.groups.set(groups || []);
+        this.loadingGroups.set(false);
       },
       error: (err) => {
-        this.errorMessage = `Error al cargar grupos: ${err.status === 0 ? 'Backend no disponible' : err.message}`;
-        this.groups = [];
-        this.loadingGroups = false;
-        this.cdr.detectChanges();
-        setTimeout(() => this.errorMessage = '', 5000);
+        this.errorMessage.set(`Error al cargar grupos: ${err.status === 0 ? 'Backend no disponible' : err.message}`);
+        this.groups.set([]);
+        this.loadingGroups.set(false);
+        setTimeout(() => this.errorMessage.set(''), 5000);
       }
     });
   }
 
-  get totalExpenses(): number {
-    return this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  }
-
-  get totalIncomes(): number {
-    return this.incomes.reduce((sum, inc) => sum + inc.amount, 0);
-  }
-
-  get balance(): number {
-    return this.totalIncomes - this.totalExpenses;
-  }
-
-  get displayedExpenses(): ExpenseDto[] {
-    return this.expenses.slice(0, 3);
-  }
-
-  get displayedIncomes(): IncomeDto[] {
-    return this.incomes.slice(0, 3);
-  }
-
-  get displayedGroups(): GroupDto[] {
-    return this.groups.slice(0, 3);
-  }
-
   toggleExpenseForm() {
-    this.showExpenseForm = !this.showExpenseForm;
-    this.showIncomeForm = false;
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.showExpenseForm.set(!this.showExpenseForm());
+    this.showIncomeForm.set(false);
+    this.successMessage.set('');
+    this.errorMessage.set('');
   }
 
   toggleIncomeForm() {
-    this.showIncomeForm = !this.showIncomeForm;
-    this.showExpenseForm = false;
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.showIncomeForm.set(!this.showIncomeForm());
+    this.showExpenseForm.set(false);
+    this.successMessage.set('');
+    this.errorMessage.set('');
   }
 
   submitExpense() {
@@ -189,15 +180,15 @@ export class DashboardComponent implements OnInit {
     
     this.expenseService.createExpense(this.expenseForm.value).subscribe({
       next: () => {
-        this.successMessage = 'Gasto creado correctamente';
+        this.successMessage.set('Gasto creado correctamente');
         this.expenseForm.reset();
-        this.showExpenseForm = false;
+        this.showExpenseForm.set(false);
         this.loadExpenses();
-        setTimeout(() => this.successMessage = '', 3000);
+        setTimeout(() => this.successMessage.set(''), 3000);
       },
       error: (err) => {
-        this.errorMessage = 'Error al crear el gasto';
-        setTimeout(() => this.errorMessage = '', 3000);
+        this.errorMessage.set('Error al crear el gasto');
+        setTimeout(() => this.errorMessage.set(''), 3000);
       }
     });
   }
@@ -207,15 +198,15 @@ export class DashboardComponent implements OnInit {
     
     this.incomeService.createIncome(this.incomeForm.value).subscribe({
       next: () => {
-        this.successMessage = 'Ingreso creado correctamente';
+        this.successMessage.set('Ingreso creado correctamente');
         this.incomeForm.reset();
-        this.showIncomeForm = false;
+        this.showIncomeForm.set(false);
         this.loadIncomes();
-        setTimeout(() => this.successMessage = '', 3000);
+        setTimeout(() => this.successMessage.set(''), 3000);
       },
       error: (err) => {
-        this.errorMessage = 'Error al crear el ingreso';
-        setTimeout(() => this.errorMessage = '', 3000);
+        this.errorMessage.set('Error al crear el ingreso');
+        setTimeout(() => this.errorMessage.set(''), 3000);
       }
     });
   }
@@ -224,13 +215,13 @@ export class DashboardComponent implements OnInit {
     if (confirm('¿Estás seguro de eliminar este gasto?')) {
       this.expenseService.deleteExpense(expenseId).subscribe({
         next: () => {
-          this.successMessage = 'Gasto eliminado correctamente';
+          this.successMessage.set('Gasto eliminado correctamente');
           this.loadExpenses();
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => this.successMessage.set(''), 3000);
         },
         error: (err) => {
-          this.errorMessage = 'Error al eliminar el gasto';
-          setTimeout(() => this.errorMessage = '', 3000);
+          this.errorMessage.set('Error al eliminar el gasto');
+          setTimeout(() => this.errorMessage.set(''), 3000);
         }
       });
     }
