@@ -10,11 +10,12 @@ import { IncomeDto } from '../../models/income.model';
 import { CategoryDto } from '../../models/category.model';
 import { GroupDto } from '../../models/group.model';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, ConfirmDialog],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -38,6 +39,10 @@ export class DashboardComponent implements OnInit {
   
   successMessage = signal('');
   errorMessage = signal('');
+
+  // Confirm dialog para eliminar gastos
+  showConfirmDialog = signal(false);
+  expenseToDelete = signal<string | null>(null);
 
   totalExpenses = computed(() => 
     this.expenses().reduce((sum, exp) => sum + exp.amount, 0)
@@ -212,18 +217,33 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteExpense(expenseId: string) {
-    if (confirm('¿Estás seguro de eliminar este gasto?')) {
-      this.expenseService.deleteExpense(expenseId).subscribe({
-        next: () => {
-          this.successMessage.set('Gasto eliminado correctamente');
-          this.loadExpenses();
-          setTimeout(() => this.successMessage.set(''), 3000);
-        },
-        error: (err) => {
-          this.errorMessage.set('Error al eliminar el gasto');
-          setTimeout(() => this.errorMessage.set(''), 3000);
-        }
-      });
-    }
+    this.expenseToDelete.set(expenseId);
+    this.showConfirmDialog.set(true);
+  }
+
+  confirmDeleteExpense() {
+    const expenseId = this.expenseToDelete();
+    if (!expenseId) return;
+
+    this.expenseService.deleteExpense(expenseId).subscribe({
+      next: () => {
+        this.successMessage.set('Gasto eliminado correctamente');
+        this.loadExpenses();
+        this.showConfirmDialog.set(false);
+        this.expenseToDelete.set(null);
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        this.errorMessage.set('Error al eliminar el gasto');
+        this.showConfirmDialog.set(false);
+        this.expenseToDelete.set(null);
+        setTimeout(() => this.errorMessage.set(''), 3000);
+      }
+    });
+  }
+
+  cancelDeleteExpense() {
+    this.showConfirmDialog.set(false);
+    this.expenseToDelete.set(null);
   }
 }

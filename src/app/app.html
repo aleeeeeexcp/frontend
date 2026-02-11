@@ -10,7 +10,7 @@
       <ul class="navbar-nav ms-auto align-items-center">
         <li class="nav-item dropdown" [class.show]="isDropdownOpen">
           <button class="user-dropdown-btn" (click)="toggleDropdown()" type="button">
-            <i class="bi bi-person-circle"></i> {{ authService.getUser()?.username }}
+            <i class="bi bi-person-circle"></i> {{ authService.currentUser()?.username }}
             <i class="bi bi-chevron-down dropdown-arrow"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end" [class.show]="isDropdownOpen">

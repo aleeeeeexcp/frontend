@@ -18,7 +18,16 @@
         </div>
 
         <div class="profile-actions">
-          <button class="btn-action btn-change-password" routerLink="/change-password">
+          <button class="btn-action btn-edit" (click)="enableEdit()" *ngIf="!isEditing">
+            <i class="bi bi-pencil-square"></i>
+            <div>
+              <div class="action-title">Editar Perfil</div>
+              <div class="action-description">Modificar datos</div>
+            </div>
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+          <button class="btn-action btn-change-password" routerLink="/change-password" *ngIf="!isEditing">
             <i class="bi bi-shield-lock"></i>
             <div>
               <div class="action-title">Cambiar Contraseña</div>
@@ -27,7 +36,7 @@
             <i class="bi bi-chevron-right"></i>
           </button>
 
-          <button class="btn-action btn-logout" (click)="logout()">
+          <button class="btn-action btn-logout" (click)="logout()" *ngIf="!isEditing">
             <i class="bi bi-box-arrow-right"></i>
             <div>
               <div class="action-title">Cerrar Sesión</div>
@@ -35,23 +44,57 @@
             </div>
             <i class="bi bi-chevron-right"></i>
           </button>
+
+          <button class="btn-action btn-save" (click)="saveProfile()" [disabled]="isLoading || profileForm.invalid" *ngIf="isEditing">
+            <i class="bi bi-check-circle"></i>
+            <div>
+              <div class="action-title">Guardar Cambios</div>
+            </div>
+          </button>
+
+          <button class="btn-action btn-cancel" (click)="cancelEdit()" [disabled]="isLoading" *ngIf="isEditing">
+            <i class="bi bi-x-circle"></i>
+            <div>
+              <div class="action-title">Cancelar</div>
+            </div>
+          </button>
         </div>
       </div>
       
       <div class="profile-info">
-        <div class="info-group">
-          <label class="info-label">
-            <i class="bi bi-person"></i> Nombre de usuario
-          </label>
-          <div class="info-value">{{ user?.username }}</div>
-        </div>
+        <form [formGroup]="profileForm">
+          <div class="info-group">
+            <label class="info-label">
+              <i class="bi bi-person"></i> Nombre de usuario
+            </label>
+            <div class="info-value" *ngIf="!isEditing">{{ user()?.username }}</div>
+            <input 
+              type="text" 
+              class="info-input" 
+              formControlName="username"
+              *ngIf="isEditing"
+              [class.invalid]="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
+            <div class="error-message" *ngIf="isEditing && profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
+              Mínimo 3 caracteres
+            </div>
+          </div>
 
-        <div class="info-group">
-          <label class="info-label">
-            <i class="bi bi-envelope"></i> Correo electrónico
-          </label>
-          <div class="info-value">{{ user?.email }}</div>
-        </div>
+          <div class="info-group">
+            <label class="info-label">
+              <i class="bi bi-envelope"></i> Correo electrónico
+            </label>
+            <div class="info-value" *ngIf="!isEditing">{{ user()?.email }}</div>
+            <input 
+              type="email" 
+              class="info-input" 
+              formControlName="email"
+              *ngIf="isEditing"
+              [class.invalid]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+            <div class="error-message" *ngIf="isEditing && profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+              Email inválido
+            </div>
+          </div>
+        </form>
 
         <div class="info-group">
           <label class="info-label">
@@ -62,13 +105,6 @@
               {{ getRoleDisplayName() }}
             </span>
           </div>
-        </div>
-
-        <div class="info-group">
-          <label class="info-label">
-            <i class="bi bi-key"></i> ID de usuario
-          </label>
-          <div class="info-value user-id">{{ user?.id }}</div>
         </div>
       </div>
     </div>
