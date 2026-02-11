@@ -1,49 +1,53 @@
 <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #f8f9fa; z-index: 1;">
-  <div class="card shadow" style="width: 100%; max-width: 380px;">
+  <div class="card shadow" style="width: 100%; max-width: 700px;">
     <div class="card-header bg-primary text-white text-center">
-      <h2 class="mb-0">Login</h2>
+      <h2 class="mb-0">Iniciar sesión</h2>
     </div>
     <div class="card-body">
       @if (errorMessage) {
         <div class="alert alert-danger">{{ errorMessage }}</div>
       }
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username:</label>
-          <input 
-            id="username" 
-            formControlName="username" 
-            type="text" 
-            class="form-control"
-            [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
-          />
-          @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
-            <div class="invalid-feedback">Username is required</div>
-          }
+        <div class="mb-3 form-row">
+          <label for="username" class="form-label-horizontal">Nombre de usuario:</label>
+          <div class="form-input-wrapper">
+            <input 
+              id="username" 
+              formControlName="username" 
+              type="text" 
+              class="form-control"
+              [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+            />
+            @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+              <div class="invalid-feedback">El nombre de usuario es obligatorio</div>
+            }
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password:</label>
-          <input 
-            id="password" 
-            formControlName="password" 
-            type="password" 
-            class="form-control"
-            [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-          />
-          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-            <div class="invalid-feedback">Password is required</div>
-          }
+        <div class="mb-3 form-row">
+          <label for="password" class="form-label-horizontal">Contraseña:</label>
+          <div class="form-input-wrapper">
+            <input 
+              id="password" 
+              formControlName="password" 
+              type="password" 
+              class="form-control"
+              [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+            />
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+              <div class="invalid-feedback">La contraseña es obligatoria</div>
+            }
+          </div>
         </div>
         <button type="submit" [disabled]="loginForm.invalid || isLoading" class="btn btn-primary w-100">
           @if (isLoading) {
-            <span>Logging in...</span>
+            <span>Iniciando sesión...</span>
           } @else {
-        <span>Login</span>
+        <span>Iniciar sesión</span>
       }
     </button>
   </form>
 
   <p class="register-link">
-    Don't have an account? <a routerLink="/register">Register here</a>
+    ¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a>
   </p>
 </div>

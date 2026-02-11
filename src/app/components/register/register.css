@@ -14,10 +14,55 @@
 }
 
 .card {
-  max-width: 420px;
+  max-width: 750px;
   width: 100%;
   animation: slideIn 0.5s ease;
   margin: 2rem auto;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.form-label-horizontal {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.95rem;
+  padding-top: 0.675rem;
+  text-align: right;
+}
+
+.form-input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #718096;
+  font-size: 0.95rem;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.login-link a {
+  color: #11998e;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+
+.login-link a:hover {
+  color: #38ef7d;
+  text-decoration: underline;
 }
 
 @keyframes slideIn {

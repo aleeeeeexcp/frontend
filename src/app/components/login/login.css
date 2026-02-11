@@ -13,9 +13,29 @@
 }
 
 .card {
-  max-width: 420px;
+  max-width: 700px;
   width: 100%;
   animation: slideIn 0.5s ease;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.form-label-horizontal {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.95rem;
+  padding-top: 0.675rem;
+  text-align: right;
+}
+
+.form-input-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideIn {
