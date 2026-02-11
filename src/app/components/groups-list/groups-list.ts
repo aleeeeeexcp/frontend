@@ -1,13 +1,14 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { GroupService } from '../../services/group.service';
 import { GroupDto } from '../../models/group.model';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-groups-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ConfirmDialog],
   templateUrl: './groups-list.html',
   styleUrls: ['./groups-list.css']
 })
@@ -15,6 +16,16 @@ export class GroupsList implements OnInit {
   groups = signal<GroupDto[]>([]);
   loading = signal(true);
   errorMessage = signal('');
+  
+  showDeleteDialog = signal(false);
+  groupToDelete = signal<{ id: string; name: string } | null>(null);
+
+  deleteMessage = computed(() => {
+    const group = this.groupToDelete();
+    return group 
+      ? `¿Estás seguro de eliminar el grupo "${group.name}"? Esta acción no se puede deshacer.`
+      : '';
+  });
 
   constructor(
     private groupService: GroupService,
@@ -40,18 +51,32 @@ export class GroupsList implements OnInit {
     });
   }
 
-  deleteGroup(groupId: string) {
-    if (confirm('¿Estás seguro de que deseas eliminar este grupo? Esta acción no se puede deshacer.')) {
-      this.groupService.deleteGroup(groupId).subscribe({
+  deleteGroup(groupId: string, groupName: string) {
+    this.groupToDelete.set({ id: groupId, name: groupName });
+    this.showDeleteDialog.set(true);
+  }
+
+  confirmDelete() {
+    const group = this.groupToDelete();
+    if (group) {
+      this.groupService.deleteGroup(group.id).subscribe({
         next: () => {
           this.loadGroups();
         },
         error: (err) => {
           console.error('Error al eliminar grupo:', err);
-          alert('No se pudo eliminar el grupo. Intenta nuevamente.');
+          this.errorMessage.set('No se pudo eliminar el grupo. Intenta nuevamente.');
+          setTimeout(() => this.errorMessage.set(''), 3000);
         }
       });
     }
+    this.showDeleteDialog.set(false);
+    this.groupToDelete.set(null);
+  }
+
+  cancelDelete() {
+    this.showDeleteDialog.set(false);
+    this.groupToDelete.set(null);
   }
 
   formatDate(dateString: string): string {

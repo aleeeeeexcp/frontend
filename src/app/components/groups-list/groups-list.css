@@ -326,6 +326,27 @@
   transform: scale(1.1);
 }
 
+.btn-delete {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  background: #fee;
+  color: #e53e3e;
+}
+
+.btn-delete:hover {
+  background: #e53e3e;
+  color: white;
+  transform: scale(1.1);
+}
+
 /* Responsive */
 @media (max-width: 992px) {
   .groups-grid {

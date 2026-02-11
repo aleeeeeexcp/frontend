@@ -57,14 +57,25 @@
           <span>{{ group.memberIds?.length || 0 }} miembros</span>
         </div>
         <div class="group-actions">
-          <button class="btn-action btn-view" title="Ver detalles" [routerLink]="['/groups', group.id]">
-            <i class="bi bi-eye"></i>
-          </button>
-          <button class="btn-action btn-settings" title="Configuración" *ngIf="group.ownerId">
-            <i class="bi bi-gear"></i>
+          <button 
+            class="btn-delete" 
+            (click)="group.id && deleteGroup(group.id, group.name); $event.stopPropagation()"
+            title="Eliminar grupo">
+            <i class="bi bi-trash-fill"></i>
           </button>
         </div>
       </div>
     </div>
   </div>
+
+  <app-confirm-dialog
+    [isOpen]="showDeleteDialog()"
+    title="Eliminar Grupo"
+    [message]="deleteMessage()"
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    type="danger"
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-dialog>
 </div>
