@@ -40,9 +40,12 @@ export class DashboardComponent implements OnInit {
   successMessage = signal('');
   errorMessage = signal('');
 
-  showConfirmDialog = signal(false);
+  showConfirmDialogExpense = signal(false);
+  showConfirmDialogIncome = signal(false);
+  showConfirmDialogGroup = signal(false);
   expenseToDelete = signal<string | null>(null);
   incomeToDelete = signal<string | null>(null);
+  groupToDelete = signal<string | null>(null);
 
   totalExpenses = computed(() => 
     this.expenses().reduce((sum, exp) => sum + exp.amount, 0)
@@ -216,39 +219,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  deleteIncome(incomeId: string) {
-    this.incomeToDelete.set(incomeId);
-    this.showConfirmDialog.set(true);
-  }
-
-  confirmDeleteIncome() {
-    const incomeId = this.incomeToDelete();
-    if (!incomeId) return;
-    this.incomeService.deleteIncome(incomeId).subscribe({
-      next: () => {
-        this.successMessage.set('Ingreso eliminado correctamente');
-        this.loadIncomes();
-        this.showConfirmDialog.set(false);
-        this.incomeToDelete.set(null);
-        setTimeout(() => this.successMessage.set(''), 30);
-      },
-      error: (err) => {
-        this.errorMessage.set('Error al eliminar el ingreso');
-        this.showConfirmDialog.set(false);
-        this.incomeToDelete.set(null);
-        setTimeout(() => this.errorMessage.set(''), 30);
-      }
-    });
-  }
-
-  cancelDeleteIncome() {
-    this.showConfirmDialog.set(false);
-    this.incomeToDelete.set(null);
-  }
-
   deleteExpense(expenseId: string) {
     this.expenseToDelete.set(expenseId);
-    this.showConfirmDialog.set(true);
+    this.showConfirmDialogExpense.set(true);
   }
 
   confirmDeleteExpense() {
@@ -259,22 +232,82 @@ export class DashboardComponent implements OnInit {
       next: () => {
         this.successMessage.set('Gasto eliminado correctamente');
         this.loadExpenses();
-        this.showConfirmDialog.set(false);
+        this.showConfirmDialogExpense.set(false);
         this.expenseToDelete.set(null);
-        setTimeout(() => this.successMessage.set(''), 30);
+        setTimeout(() => this.successMessage.set(''), 3000);
       },
       error: (err) => {
         this.errorMessage.set('Error al eliminar el gasto');
-        this.showConfirmDialog.set(false);
+        this.showConfirmDialogExpense.set(false);
         this.expenseToDelete.set(null);
-        setTimeout(() => this.errorMessage.set(''), 30);
+        setTimeout(() => this.errorMessage.set(''), 3000);
       }
     });
   }
 
   cancelDeleteExpense() {
-    this.showConfirmDialog.set(false);
+    this.showConfirmDialogExpense.set(false);
     this.expenseToDelete.set(null);
+  }
+
+  deleteGroup(groupId: string) {
+    this.groupToDelete.set(groupId);
+    this.showConfirmDialogGroup.set(true);
+  }
+
+  confirmDeleteGroup() {
+    const groupId = this.groupToDelete();
+    if (!groupId) return;
+    this.groupService.deleteGroup(groupId).subscribe({
+      next: () => {
+        this.successMessage.set('Grupo eliminado correctamente');
+        this.loadGroups();
+        this.showConfirmDialogGroup.set(false);
+        this.groupToDelete.set(null);
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        this.errorMessage.set('Error al eliminar el grupo');
+        this.showConfirmDialogGroup.set(false);
+        this.groupToDelete.set(null);
+        setTimeout(() => this.errorMessage.set(''), 3000);
+      }
+    });
+  }
+
+  cancelDeleteGroup() {
+    this.showConfirmDialogGroup.set(false);
+    this.groupToDelete.set(null);
+  }
+
+  deleteIncome(incomeId: string) {
+    this.incomeToDelete.set(incomeId);
+    this.showConfirmDialogIncome.set(true);
+  }
+
+  confirmDeleteIncome() {
+    const incomeId = this.incomeToDelete();
+    if (!incomeId) return;
+    this.incomeService.deleteIncome(incomeId).subscribe({
+      next: () => {
+        this.successMessage.set('Ingreso eliminado correctamente');
+        this.loadIncomes();
+        this.showConfirmDialogIncome.set(false);
+        this.incomeToDelete.set(null);
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        this.errorMessage.set('Error al eliminar el ingreso');
+        this.showConfirmDialogIncome.set(false);
+        this.incomeToDelete.set(null);
+        setTimeout(() => this.errorMessage.set(''), 3000);
+      }
+    });
+  }
+
+  cancelDeleteIncome() {
+    this.showConfirmDialogIncome.set(false);
+    this.incomeToDelete.set(null);
   }
 
   getCategoryName(categoryId?: string): string | null {

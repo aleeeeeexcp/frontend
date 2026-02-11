@@ -224,6 +224,9 @@
           </div>
           <div class="item-body">
             <p class="item-description">{{ group.description }}</p>
+            <button class="btn-delete" (click)="deleteGroup(group.id!)">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -235,7 +238,7 @@
   </div>
 
   <app-confirm-dialog
-    [isOpen]="showConfirmDialog()"
+    [isOpen]="showConfirmDialogExpense()"
     title="Eliminar Gasto"
     message="¿Estás seguro de que deseas eliminar este gasto? Esta acción no se puede deshacer."
     confirmText="Eliminar"
@@ -243,4 +246,26 @@
     type="danger"
     (confirm)="confirmDeleteExpense()"
     (cancel)="cancelDeleteExpense()">
+  </app-confirm-dialog>
+
+  <app-confirm-dialog
+    [isOpen]="showConfirmDialogIncome()"
+    title="Eliminar Ingreso"
+    message="¿Estás seguro de que deseas eliminar este ingreso? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    type="danger"
+    (confirm)="confirmDeleteIncome()"
+    (cancel)="cancelDeleteIncome()">
+  </app-confirm-dialog>
+
+  <app-confirm-dialog
+    [isOpen]="showConfirmDialogGroup()"
+    title="Eliminar Grupo"
+    message="¿Estás seguro de que deseas eliminar este grupo? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    type="danger"
+    (confirm)="confirmDeleteGroup()"
+    (cancel)="cancelDeleteGroup()">
   </app-confirm-dialog>
