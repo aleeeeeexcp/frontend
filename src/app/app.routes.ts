@@ -16,6 +16,7 @@ import { UsersManagement } from './components/users-management/users-management'
 import { CategoriesManagement } from './components/categories-management/categories-management';
 import { CreateCategory } from './components/create-category/create-category';
 import { ChangePassword } from './components/change-password/change-password';
+import { UserProfile } from './components/user-profile/user-profile';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'create-category', component: CreateCategory },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
-  { path: 'change-password', component: ChangePassword }
+  { path: 'change-password', component: ChangePassword },
+  { path: 'profile', component: UserProfile }
 ];
 

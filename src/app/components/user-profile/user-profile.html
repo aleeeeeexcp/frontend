@@ -1,0 +1,76 @@
+<div class="profile-container fade-in">
+  <div class="page-header">
+    <button class="btn-back" routerLink="/dashboard">
+      <i class="bi bi-arrow-left"></i> Volver
+    </button>
+    <h1>
+      <i class="bi bi-person-circle"></i> Mi Perfil
+    </h1>
+  </div>
+
+  <div class="profile-content">
+    <div class="profile-card">
+      <div class="profile-main">
+        <div class="profile-left">
+          <div class="profile-avatar">
+            <i class="bi bi-person-circle"></i>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button class="btn-action btn-change-password" routerLink="/change-password">
+            <i class="bi bi-shield-lock"></i>
+            <div>
+              <div class="action-title">Cambiar Contraseña</div>
+              <div class="action-description">Actualiza tu contraseña</div>
+            </div>
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+          <button class="btn-action btn-logout" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            <div>
+              <div class="action-title">Cerrar Sesión</div>
+              <div class="action-description">Salir de tu cuenta</div>
+            </div>
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="profile-info">
+        <div class="info-group">
+          <label class="info-label">
+            <i class="bi bi-person"></i> Nombre de usuario
+          </label>
+          <div class="info-value">{{ user?.username }}</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">
+            <i class="bi bi-envelope"></i> Correo electrónico
+          </label>
+          <div class="info-value">{{ user?.email }}</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">
+            <i class="bi bi-shield-check"></i> Rol
+          </label>
+          <div class="info-value">
+            <span [class]="'role-badge ' + getRoleBadgeClass()">
+              {{ getRoleDisplayName() }}
+            </span>
+          </div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">
+            <i class="bi bi-key"></i> ID de usuario
+          </label>
+          <div class="info-value user-id">{{ user?.id }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
