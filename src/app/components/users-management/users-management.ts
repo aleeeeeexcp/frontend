@@ -63,12 +63,12 @@ export class UsersManagement implements OnInit {
         next: () => {
           this.successMessage.set('Usuario eliminado correctamente');
           this.loadUsers();
-          setTimeout(() => this.successMessage.set(''), 3000);
+          setTimeout(() => this.successMessage.set(''), 30);
         },
         error: (err) => {
           console.error('Error al eliminar usuario:', err);
           this.errorMessage.set('Error al eliminar el usuario');
-          setTimeout(() => this.errorMessage.set(''), 3000);
+          setTimeout(() => this.errorMessage.set(''), 30);
         }
       });
     }

@@ -66,7 +66,7 @@ export class GroupsList implements OnInit {
         error: (err) => {
           console.error('Error al eliminar grupo:', err);
           this.errorMessage.set('No se pudo eliminar el grupo. Intenta nuevamente.');
-          setTimeout(() => this.errorMessage.set(''), 3000);
+          setTimeout(() => this.errorMessage.set(''), 30);
         }
       });
     }

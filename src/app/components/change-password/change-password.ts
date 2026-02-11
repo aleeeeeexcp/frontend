@@ -64,7 +64,7 @@ export class ChangePassword {
           
           setTimeout(() => {
             this.router.navigate(['/dashboard']);
-          }, 2000);
+          }, 15);
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Failed to change password. Please check your current password.';

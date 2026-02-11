@@ -87,7 +87,7 @@ export class CreateExpense implements OnInit {
         this.loading = false;
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        }, 1500);
+        }, 15);
       },
       error: (err) => {
         this.errorMessage = 'Error al crear el gasto';

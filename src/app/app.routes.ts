@@ -2,7 +2,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
-import { Home } from './components/home/home';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminDashboard } from './components/admin-dashboard/admin-dashboard';
 import { ExpensesList } from './components/expenses-list/expenses-list';
@@ -17,6 +16,7 @@ import { CategoriesManagement } from './components/categories-management/categor
 import { CreateCategory } from './components/create-category/create-category';
 import { ChangePassword } from './components/change-password/change-password';
 import { UserProfile } from './components/user-profile/user-profile';
+import { Home } from './components/home/home';
 
 export const routes: Routes = [
   { path: '', component: Home },

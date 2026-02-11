@@ -230,13 +230,13 @@ export class DashboardComponent implements OnInit {
         this.loadIncomes();
         this.showConfirmDialog.set(false);
         this.incomeToDelete.set(null);
-        setTimeout(() => this.successMessage.set(''), 3000);
+        setTimeout(() => this.successMessage.set(''), 30);
       },
       error: (err) => {
         this.errorMessage.set('Error al eliminar el ingreso');
         this.showConfirmDialog.set(false);
         this.incomeToDelete.set(null);
-        setTimeout(() => this.errorMessage.set(''), 3000);
+        setTimeout(() => this.errorMessage.set(''), 30);
       }
     });
   }
@@ -261,13 +261,13 @@ export class DashboardComponent implements OnInit {
         this.loadExpenses();
         this.showConfirmDialog.set(false);
         this.expenseToDelete.set(null);
-        setTimeout(() => this.successMessage.set(''), 3000);
+        setTimeout(() => this.successMessage.set(''), 30);
       },
       error: (err) => {
         this.errorMessage.set('Error al eliminar el gasto');
         this.showConfirmDialog.set(false);
         this.expenseToDelete.set(null);
-        setTimeout(() => this.errorMessage.set(''), 3000);
+        setTimeout(() => this.errorMessage.set(''), 30);
       }
     });
   }
