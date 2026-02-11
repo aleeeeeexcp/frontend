@@ -15,6 +15,7 @@ import { GroupView } from './components/group-view/group-view';
 import { UsersManagement } from './components/users-management/users-management';
 import { CategoriesManagement } from './components/categories-management/categories-management';
 import { CreateCategory } from './components/create-category/create-category';
+import { ChangePassword } from './components/change-password/change-password';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -31,6 +32,7 @@ export const routes: Routes = [
   { path: 'categories', component: CategoriesManagement },
   { path: 'create-category', component: CreateCategory },
   { path: 'login', component: Login },
-  { path: 'register', component: Register }
+  { path: 'register', component: Register },
+  { path: 'change-password', component: ChangePassword }
 ];
 

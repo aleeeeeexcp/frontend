@@ -21,3 +21,8 @@ export interface AuthenticatedUsersDto {
     roleType: string;
   };
 }
+
+export interface ChangePasswordParamsDto {
+  oldPassword: string;
+  newPassword: string;
+}

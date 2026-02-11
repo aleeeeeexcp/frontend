@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UsersDto } from '../models/user.model';
+import { ChangePasswordParamsDto, UsersDto } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,5 +24,14 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}/delete?id=${id}`, {
       headers: this.getHeaders()
     });
+  }
+
+  changePassword(userId: string, changePasswordData: ChangePasswordParamsDto): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/changePassword?id=${userId}`, changePasswordData, { headers: this.getHeaders() });
+  }
+
+  getUser(): any {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 }
