@@ -452,6 +452,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding-top: 0.75rem;
   border-top: 1px solid #e2e8f0;
 }
@@ -462,6 +464,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.expense-category {
+  color: #667eea;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.expense-category i {
+  color: #667eea;
 }
 
 .item-members {

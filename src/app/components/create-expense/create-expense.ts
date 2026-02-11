@@ -37,7 +37,7 @@ export class CreateExpense implements OnInit {
       description: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required],
+      categoryId: [''],
       groupId: ['']
     });
   }

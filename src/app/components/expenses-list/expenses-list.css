@@ -208,6 +208,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding-top: 1rem;
   border-top: 2px solid #f7fafc;
 }
@@ -222,6 +224,22 @@
 
 .expense-date i {
   color: #f5576c;
+}
+
+.expense-category {
+  color: #667eea;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.expense-category i {
+  color: #667eea;
 }
 
 .empty-state {

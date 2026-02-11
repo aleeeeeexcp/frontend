@@ -41,7 +41,7 @@ export class CreateCategory {
         this.loading = false;
         setTimeout(() => {
           this.router.navigate(['/categories']);
-        }, 1500);
+        }, 15);
       },
       error: (err) => {
         this.errorMessage = 'Error al crear la categoría';

@@ -59,6 +59,9 @@
         <span class="expense-date">
           <i class="bi bi-calendar"></i> {{ expense.date | date:'dd/MM/yyyy' }}
         </span>
+        <span class="expense-category" *ngIf="getCategoryName(expense.categoryId)">
+          <i class="bi bi-tag"></i> {{ getCategoryName(expense.categoryId) }}
+        </span>
       </div>
     </div>
   </div>

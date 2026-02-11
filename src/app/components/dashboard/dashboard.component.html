@@ -72,9 +72,9 @@
           <input id="expense-date" formControlName="date" type="date" class="form-control" />
         </div>
         <div class="mb-3">
-          <label for="expense-category" class="form-label">Categoría</label>
+          <label for="expense-category" class="form-label">Categoría (Opcional)</label>
           <select id="expense-category" formControlName="categoryId" class="form-select">
-            <option value="" disabled selected>Seleccionar categoría</option>
+            <option value="">Sin categoría</option>
             <option *ngFor="let category of categories()" [value]="category.id">{{ category.name }}</option>
           </select>
         </div>
@@ -152,6 +152,9 @@
             <span class="item-date">
               <i class="bi bi-calendar"></i> {{ expense.date | date:'dd/MM/yyyy' }}
             </span>
+            <span class="expense-category" *ngIf="getCategoryName(expense.categoryId)">
+              <i class="bi bi-tag"></i> {{ getCategoryName(expense.categoryId) }}
+            </span>
             <button class="btn-delete" (click)="deleteExpense(expense.id)">
               <i class="bi bi-trash"></i>
             </button>
@@ -188,6 +191,9 @@
             <span class="item-date">
               <i class="bi bi-calendar"></i> {{ income.date | date:'dd/MM/yyyy' }}
             </span>
+            <button class="btn-delete" (click)="deleteIncome(income.id)">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
         </div>
       </div>

@@ -40,9 +40,9 @@ export class DashboardComponent implements OnInit {
   successMessage = signal('');
   errorMessage = signal('');
 
-  // Confirm dialog para eliminar gastos
   showConfirmDialog = signal(false);
   expenseToDelete = signal<string | null>(null);
+  incomeToDelete = signal<string | null>(null);
 
   totalExpenses = computed(() => 
     this.expenses().reduce((sum, exp) => sum + exp.amount, 0)
@@ -79,7 +79,7 @@ export class DashboardComponent implements OnInit {
       description: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required],
+      categoryId: [''],
       groupId: ['']
     });
     
@@ -216,6 +216,36 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  deleteIncome(incomeId: string) {
+    this.incomeToDelete.set(incomeId);
+    this.showConfirmDialog.set(true);
+  }
+
+  confirmDeleteIncome() {
+    const incomeId = this.incomeToDelete();
+    if (!incomeId) return;
+    this.incomeService.deleteIncome(incomeId).subscribe({
+      next: () => {
+        this.successMessage.set('Ingreso eliminado correctamente');
+        this.loadIncomes();
+        this.showConfirmDialog.set(false);
+        this.incomeToDelete.set(null);
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        this.errorMessage.set('Error al eliminar el ingreso');
+        this.showConfirmDialog.set(false);
+        this.incomeToDelete.set(null);
+        setTimeout(() => this.errorMessage.set(''), 3000);
+      }
+    });
+  }
+
+  cancelDeleteIncome() {
+    this.showConfirmDialog.set(false);
+    this.incomeToDelete.set(null);
+  }
+
   deleteExpense(expenseId: string) {
     this.expenseToDelete.set(expenseId);
     this.showConfirmDialog.set(true);
@@ -245,5 +275,11 @@ export class DashboardComponent implements OnInit {
   cancelDeleteExpense() {
     this.showConfirmDialog.set(false);
     this.expenseToDelete.set(null);
+  }
+
+  getCategoryName(categoryId?: string): string | null {
+    if (!categoryId) return null;
+    const category = this.categories().find(cat => cat.id === categoryId);
+    return category ? category.name : null;
   }
 }

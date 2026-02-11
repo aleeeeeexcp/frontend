@@ -124,4 +124,10 @@ export class ExpensesList implements OnInit {
     });
   }
 
+  getCategoryName(categoryId?: string): string | null {
+    if (!categoryId) return null;
+    const category = this.categories().find(cat => cat.id === categoryId);
+    return category ? category.name : null;
+  }
+
 }

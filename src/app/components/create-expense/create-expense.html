@@ -67,7 +67,7 @@
 
       <div class="form-group">
         <label for="categoryId" class="form-label">
-          <i class="bi bi-tags"></i> Categoría
+          <i class="bi bi-tags"></i> Categoría (Opcional)
         </label>
         <div *ngIf="loadingCategories" class="loading-categories">
           <div class="spinner-border spinner-border-sm text-primary"></div>
@@ -78,11 +78,10 @@
           id="categoryId" 
           class="form-control" 
           formControlName="categoryId">
-          <option value="" disabled selected>Seleccionar categoría</option>
+          <option value="">Sin categoría</option>
           <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
         </select>
         <div *ngIf="expenseForm.get('categoryId')?.invalid && expenseForm.get('categoryId')?.touched" class="error-message">
-          <span *ngIf="expenseForm.get('categoryId')?.errors?.['required']">La categoría es obligatoria</span>
         </div>
       </div>
 
