@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GroupService } from '../../services/group.service';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 import { GroupDto } from '../../models/group.model';
 import { UsersDto } from '../../models/user.model';
 
@@ -27,6 +28,7 @@ export class CreateGroup implements OnInit {
     private fb: FormBuilder,
     private groupService: GroupService,
     private userService: UserService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.groupForm = this.fb.group({
@@ -42,9 +44,15 @@ export class CreateGroup implements OnInit {
 
   loadUsers() {
     this.loadingUsers.set(true);
+    const currentUser = this.authService.getUser();
+    const currentUserId = currentUser?.id;
+
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        this.users.set(users || []);
+        const filteredUsers = currentUserId 
+          ? users.filter(user => user.id !== currentUserId)
+          : users;
+        this.users.set(filteredUsers || []);
         this.loadingUsers.set(false);
       },
       error: (err) => {
@@ -91,7 +99,7 @@ export class CreateGroup implements OnInit {
 
           setTimeout(() => {
             this.router.navigate(['/dashboard']);
-          }, 1500);
+          }, 15);
         },
         error: (error) => {
           this.errorMessage.set(error.error?.message || 'Error al crear el grupo. Intenta nuevamente.');
