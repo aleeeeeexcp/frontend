@@ -5,7 +5,7 @@ import { CategoryService } from '../../services/category.service';
 import { GroupService } from '../../services/group.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { CategoryDto } from '../../models/category.model';
 import { GroupDto } from '../../models/group.model';
 
@@ -25,13 +25,15 @@ export class CreateExpense implements OnInit {
   loadingCategories = false;
   groups: GroupDto[] = [];
   loadingGroups = false;
+  groupId: string | null = null;
 
   constructor(
     private expenseService: ExpenseService, 
     private categoryService: CategoryService,
     private groupService: GroupService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.expenseForm = this.fb.group({
       description: ['', Validators.required],
@@ -45,6 +47,14 @@ export class CreateExpense implements OnInit {
   ngOnInit() {
     this.loadCategories();
     this.loadGroups();
+    
+    // Pre-seleccionar grupo si viene como parámetro
+    this.route.queryParams.subscribe(params => {
+      this.groupId = params['groupId'];
+      if (this.groupId) {
+        this.expenseForm.patchValue({ groupId: this.groupId });
+      }
+    });
   }
 
   loadCategories() {
@@ -86,7 +96,11 @@ export class CreateExpense implements OnInit {
         this.expenseForm.reset();
         this.loading = false;
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          if (this.groupId) {
+            this.router.navigate(['/groups', this.groupId]);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         }, 15);
       },
       error: (err) => {

@@ -53,6 +53,9 @@
     <div class="data-section expense-section">
       <div class="section-header">
         <h3><i class="bi bi-wallet2"></i> Gastos del Grupo</h3>
+        <button class="btn btn-danger" [routerLink]="['/create-expense']" [queryParams]="{groupId: groupId()}">
+          <i class="bi bi-plus-circle"></i> Añadir Gasto
+        </button>
       </div>
 
       <div *ngIf="loadingExpenses()" class="loading">
@@ -85,6 +88,9 @@
     <div class="data-section income-section">
       <div class="section-header">
         <h3><i class="bi bi-cash-stack"></i> Ingresos del Grupo</h3>
+        <button class="btn btn-success" [routerLink]="['/create-income']" [queryParams]="{groupId: groupId()}">
+          <i class="bi bi-plus-circle"></i> Añadir Ingreso
+        </button>
       </div>
 
       <div *ngIf="loadingIncomes()" class="loading">

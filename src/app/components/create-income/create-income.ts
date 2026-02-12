@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { IncomeService } from '../../services/income.service';
 import { GroupService } from '../../services/group.service';
 import { CategoryDto } from '../../models/category.model';
@@ -23,12 +23,14 @@ export class CreateIncome implements OnInit {
   loadingCategories = false;
   groups: GroupDto[] = [];
   loadingGroups = false;
+  groupId: string | null = null;
 
   constructor(
     private incomeService: IncomeService,
     private groupService: GroupService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.incomeForm = this.fb.group({
       source: ['', Validators.required],
@@ -41,6 +43,14 @@ export class CreateIncome implements OnInit {
 
   ngOnInit() {
     this.loadGroups();
+    
+    // Pre-seleccionar grupo si viene como parámetro
+    this.route.queryParams.subscribe(params => {
+      this.groupId = params['groupId'];
+      if (this.groupId) {
+        this.incomeForm.patchValue({ groupId: this.groupId });
+      }
+    });
   }
 
   loadGroups() {
@@ -69,7 +79,11 @@ export class CreateIncome implements OnInit {
         this.incomeForm.reset();
         this.loading = false;
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          if (this.groupId) {
+            this.router.navigate(['/groups', this.groupId]);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         }, 15);
       },
       error: (err) => {
