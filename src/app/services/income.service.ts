@@ -30,4 +30,12 @@ export class IncomeService {
     const params = new HttpParams().set('incomeId', incomeId);
     return this.http.delete<void>(`${this.apiUrl}/delete`, { params, headers: this.getHeaders() });
   }
+
+  getAllUsersIncomesSortedByAmount(): Observable<IncomeDto[]> {
+    return this.http.get<IncomeDto[]>(`${this.apiUrl}/sortedByAmount`, { headers: this.getHeaders() });
+  }
+
+  getAllUsersIncomesSortedByDate(): Observable<IncomeDto[]> {
+    return this.http.get<IncomeDto[]>(`${this.apiUrl}/sortedByDate`, { headers: this.getHeaders() });
+  }
 }

@@ -15,6 +15,7 @@ import { IncomeService } from '../../services/income.service';
 export class IncomesList implements OnInit {
   incomes = signal<IncomeDto[]>([]);
   loading = signal(true);
+  sortBy = signal<'default' | 'amount' | 'date'>('default');
 
   constructor(
     private incomeService: IncomeService
@@ -26,7 +27,20 @@ export class IncomesList implements OnInit {
 
   loadIncomes() {
     this.loading.set(true);
-    this.incomeService.getAllUsersIncomes().subscribe({
+    let request$;
+    
+    switch(this.sortBy()) {
+      case 'amount':
+        request$ = this.incomeService.getAllUsersIncomesSortedByAmount();
+        break;
+      case 'date':
+        request$ = this.incomeService.getAllUsersIncomesSortedByDate();
+        break;
+      default:
+        request$ = this.incomeService.getAllUsersIncomes();
+    }
+
+    request$.subscribe({
       next: (incomes) => {
         this.incomes.set(incomes || []);
         this.loading.set(false);
@@ -37,5 +51,10 @@ export class IncomesList implements OnInit {
         this.loading.set(false);
       }
     }); 
+  }
+
+  changeSortBy(sort: 'default' | 'amount' | 'date') {
+    this.sortBy.set(sort);
+    this.loadIncomes();
   }
 }

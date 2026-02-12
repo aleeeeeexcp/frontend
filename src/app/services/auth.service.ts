@@ -12,7 +12,6 @@ export class AuthService {
   private currentUserSignal = signal<any>(null);
 
   constructor(private http: HttpClient) {
-    // Inicializar el signal con el usuario de localStorage si existe
     const storedUser = this.getUserFromStorage();
     if (storedUser) {
       this.currentUserSignal.set(storedUser);

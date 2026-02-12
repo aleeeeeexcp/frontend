@@ -13,6 +13,30 @@
     </button>
   </div>
 
+  <div class="filters-section">
+    <label>Ordenar por:</label>
+    <div class="filters-buttons">
+      <button 
+        class="filter-btn" 
+        [class.active]="sortBy() === 'default'"
+        (click)="changeSortBy('default')">
+        <i class="bi bi-list-ul"></i> Por Defecto
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="sortBy() === 'amount'"
+        (click)="changeSortBy('amount')">
+        <i class="bi bi-cash"></i> Por Cantidad
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="sortBy() === 'date'"
+        (click)="changeSortBy('date')">
+        <i class="bi bi-calendar"></i> Por Fecha
+      </button>
+    </div>
+  </div>
+
   <div *ngIf="incomes().length; else noIncomes" class="incomes-grid">
     @for (income of incomes(); track $index) {
       <div class="income-card">
