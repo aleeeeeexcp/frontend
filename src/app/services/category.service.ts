@@ -30,4 +30,8 @@ export class CategoryService {
       body: id
     });
   }
+
+  updateCategory(category: CategoryDto): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/updateCategory`, category, { headers: this.getHeaders() });
+  }
 }

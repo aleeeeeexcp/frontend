@@ -47,7 +47,7 @@
           </td>
           <td class="category-description">{{ category.description || 'Sin descripción' }}</td>
           <td class="actions">
-            <button class="btn-action btn-edit" title="Editar categoría">
+            <button class="btn-action btn-edit" title="Editar categoría" (click)="editCategory(category)">
               <i class="bi bi-pencil"></i>
             </button>
             <button class="btn-action btn-delete" title="Eliminar categoría" (click)="deleteCategory(category.id!, category.name)">

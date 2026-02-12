@@ -4,7 +4,7 @@
       <i class="bi bi-arrow-left"></i> Volver
     </button>
     <h1>
-      <i class="bi bi-tag-fill"></i> Crear Nueva Categoría
+      <i class="bi bi-tag-fill"></i> {{ isEditMode ? 'Editar Categoría' : 'Crear Nueva Categoría' }}
     </h1>
   </div>
 
@@ -54,7 +54,8 @@
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="categoryForm.invalid || loading">
           <span *ngIf="!loading">
-            <i class="bi bi-plus-circle"></i> Crear Categoría
+            <i class="bi" [ngClass]="isEditMode ? 'bi-save' : 'bi-plus-circle'"></i>
+            {{ isEditMode ? 'Guardar Cambios' : 'Crear Categoría' }}
           </span>
           <span *ngIf="loading">
             <span class="spinner-border spinner-border-sm me-2"></span> Guardando...

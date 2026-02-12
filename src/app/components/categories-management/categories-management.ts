@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CategoryDto } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
@@ -29,7 +29,8 @@ export class CategoriesManagement implements OnInit {
   });
 
   constructor(
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -79,5 +80,9 @@ export class CategoriesManagement implements OnInit {
   cancelDelete() {
     this.showDeleteDialog.set(false);
     this.categoryToDelete.set(null);
+  }
+
+  editCategory(category: CategoryDto) {
+    this.router.navigate(['/create-category'], { state: { category } });
   }
 }

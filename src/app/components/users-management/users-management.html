@@ -32,7 +32,7 @@
           <th><i class="bi bi-person"></i> Usuario</th>
           <th><i class="bi bi-envelope"></i> Email</th>
           <th><i class="bi bi-shield"></i> Rol</th>
-          <th class="text-center"><i class="bi bi-gear"></i> Acciones</th>
+          <th class="text-center"><i class="bi bi-gear"></i></th>
         </tr>
       </thead>
       <tbody>
@@ -45,9 +45,6 @@
             </span>
           </td>
           <td class="actions">
-            <button class="btn-action btn-edit" title="Editar usuario">
-              <i class="bi bi-pencil"></i>
-            </button>
             <button class="btn-action btn-delete" title="Eliminar usuario" (click)="deleteUser(user.id!, user.username)">
               <i class="bi bi-trash"></i>
             </button>
