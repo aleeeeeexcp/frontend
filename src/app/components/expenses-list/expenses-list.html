@@ -62,6 +62,9 @@
         <span class="expense-category" *ngIf="getCategoryName(expense.categoryId)">
           <i class="bi bi-tag"></i> {{ getCategoryName(expense.categoryId) }}
         </span>
+        <button class="btn-delete" (click)="deleteExpense(expense.id)">
+          <i class="bi bi-trash"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -76,4 +79,23 @@
       </button>
     </div>
   </ng-template>
+
+  <div *ngIf="successMessage()" class="alert alert-success">
+    {{ successMessage() }}
+  </div>
+  
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    {{ errorMessage() }}
+  </div>
+
+  <app-confirm-dialog
+    [isOpen]="showConfirmDialog()"
+    title="Eliminar Gasto"
+    message="¿Estás seguro de que deseas eliminar este gasto? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    type="danger"
+    (confirm)="confirmDeleteExpense()"
+    (cancel)="cancelDeleteExpense()">
+  </app-confirm-dialog>
 </div>

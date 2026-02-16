@@ -6,11 +6,12 @@ import { ExpenseDto } from '../../models/expense.model';
 import { CategoryDto } from '../../models/category.model';
 import { ExpenseService } from '../../services/expense.service';
 import { CategoryService } from '../../services/category.service';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-expenses-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmDialog],
   templateUrl: './expenses-list.html',
   styleUrls: ['./expenses-list.css'],
 })
@@ -21,6 +22,10 @@ export class ExpensesList implements OnInit {
   loading = signal(true);
   sortBy = signal<'date' | 'amount' | 'none'>('none');
   selectedCategoryId = signal('');
+  expenseToDelete = signal<string | null>(null);
+  showConfirmDialog = signal(false);
+  successMessage = signal('');
+  errorMessage = signal('');
 
   constructor(
     private expenseService: ExpenseService,
@@ -128,6 +133,37 @@ export class ExpensesList implements OnInit {
     if (!categoryId) return null;
     const category = this.categories().find(cat => cat.id === categoryId);
     return category ? category.name : null;
+  }
+
+  deleteExpense(expenseId: string) {
+    this.expenseToDelete.set(expenseId);
+    this.showConfirmDialog.set(true);
+  }
+
+  confirmDeleteExpense() {
+    const expenseId = this.expenseToDelete();
+    if (!expenseId) return;
+
+    this.expenseService.deleteExpense(expenseId).subscribe({
+      next: () => {
+        this.successMessage.set('Gasto eliminado correctamente');
+        this.loadExpenses();
+        this.showConfirmDialog.set(false);
+        this.expenseToDelete.set(null);
+        setTimeout(() => this.successMessage.set(''), 3000);
+      },
+      error: (err) => {
+        this.errorMessage.set('Error al eliminar el gasto');
+        this.showConfirmDialog.set(false);
+        this.expenseToDelete.set(null);
+        setTimeout(() => this.errorMessage.set(''), 3000);
+      }
+    });
+  }
+
+  cancelDeleteExpense() {
+    this.showConfirmDialog.set(false);
+    this.expenseToDelete.set(null);
   }
 
 }

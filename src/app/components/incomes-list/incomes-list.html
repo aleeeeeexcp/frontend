@@ -51,6 +51,9 @@
           <span class="income-date">
             <i class="bi bi-calendar"></i> {{ income.date | date:'dd/MM/yyyy' }}
           </span>
+          <button class="btn-delete" (click)="deleteIncome(income.id)">
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       </div>
     }
@@ -66,4 +69,23 @@
       </button>
     </div>
   </ng-template>
+
+  <div *ngIf="successMessage()" class="alert alert-success">
+    {{ successMessage() }}
+  </div>
+  
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    {{ errorMessage() }}
+  </div>
+
+  <app-confirm-dialog
+    [isOpen]="showConfirmDialog()"
+    title="Eliminar Ingreso"
+    message="¿Estás seguro de que deseas eliminar este ingreso? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    type="danger"
+    (confirm)="confirmDeleteIncome()"
+    (cancel)="cancelDeleteIncome()">
+  </app-confirm-dialog>
 </div>

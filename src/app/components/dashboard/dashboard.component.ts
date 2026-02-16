@@ -155,7 +155,7 @@ export class DashboardComponent implements OnInit {
   loadGroups() {
     this.loadingGroups.set(true);
     
-    this.groupService.getAllGroups().subscribe({
+    this.groupService.getUserGroups().subscribe({
       next: (groups) => {
         this.groups.set(groups || []);
         this.loadingGroups.set(false);
