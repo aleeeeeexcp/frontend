@@ -1,4 +1,4 @@
-import { Component, signal, HostListener } from '@angular/core';
+import { Component, signal, computed, HostListener } from '@angular/core';
 import { RouterOutlet, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth.service';
@@ -12,6 +12,10 @@ import { AuthService } from './services/auth.service';
 export class App {
   protected readonly title = signal('frontend');
   isDropdownOpen = false;
+
+  dashboardRoute = computed(() => 
+    this.authService.isAdmin() ? '/admin-dashboard' : '/dashboard'
+  );
 
   constructor(public authService: AuthService, private router: Router) {}
 

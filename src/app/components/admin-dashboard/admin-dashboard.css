@@ -80,6 +80,10 @@
   background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
 }
 
+.groups-card::before {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+
 .system-card::before {
   background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
 }
@@ -107,6 +111,11 @@
 .categories-card .stat-icon {
   background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);
   color: #f5576c;
+}
+
+.groups-card .stat-icon {
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+  color: #4facfe;
 }
 
 .system-card .stat-icon {
@@ -209,7 +218,8 @@
 
 /* Recent Section */
 .recent-section,
-.categories-section {
+.categories-section,
+.groups-section {
   background: white;
   border-radius: 20px;
   padding: 2rem;
@@ -253,7 +263,8 @@
 }
 
 /* Table */
-.users-table-card {
+.users-table-card,
+.groups-table-card {
   overflow-x: auto;
 }
 
@@ -306,7 +317,8 @@
   color: #2d3748;
 }
 
-.user-cell {
+.user-cell,
+.group-cell {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -317,14 +329,37 @@
   color: #667eea;
 }
 
-.user-name {
+.group-cell i {
+  font-size: 2rem;
+  color: #4facfe;
+}
+
+.user-name,
+.group-name {
   font-weight: 600;
   font-size: 1rem;
 }
 
-.email-cell {
+.email-cell,
+.description-cell {
   color: #4a5568;
   font-size: 0.95rem;
+}
+
+.members-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(79, 172, 254, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%);
+  color: #4facfe;
+}
+
+.members-badge i {
+  font-size: 1rem;
 }
 
 .role-badge {

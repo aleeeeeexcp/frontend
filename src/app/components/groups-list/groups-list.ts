@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { GroupService } from '../../services/group.service';
 import { GroupDto } from '../../models/group.model';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-groups-list',
@@ -20,16 +21,24 @@ export class GroupsList implements OnInit {
   showDeleteDialog = signal(false);
   groupToDelete = signal<{ id: string; name: string } | null>(null);
 
+  isAdmin = computed(() => this.authService.isAdmin());
+  dashboardRoute = computed(() => this.isAdmin() ? '/admin-dashboard' : '/dashboard');
+
   deleteMessage = computed(() => {
     const group = this.groupToDelete();
-    return group 
-      ? `¿Estás seguro de eliminar el grupo "${group.name}"? Esta acción no se puede deshacer.`
-      : '';
+    if (!group) return '';
+    
+    if (this.isAdmin()) {
+      return `¿Estás seguro de eliminar permanentemente el grupo "${group.name}"? Esta acción eliminará el grupo para todos los usuarios y no se puede deshacer.`;
+    } else {
+      return `¿Estás seguro de salir del grupo "${group.name}"? Esta acción no se puede deshacer.`;
+    }
   });
 
   constructor(
     private groupService: GroupService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -38,7 +47,14 @@ export class GroupsList implements OnInit {
 
   loadGroups() {
     this.loading.set(true);
-    this.groupService.getUserGroups().subscribe({
+    const isAdmin = this.authService.isAdmin();
+    
+    // Si es admin, cargar todos los grupos; si no, solo los del usuario
+    const groupsObservable = isAdmin 
+      ? this.groupService.getAllGroups()
+      : this.groupService.getUserGroups();
+    
+    groupsObservable.subscribe({
       next: (groups) => {
         this.groups.set(groups || []);
         this.loading.set(false);
@@ -59,7 +75,12 @@ export class GroupsList implements OnInit {
   confirmDelete() {
     const group = this.groupToDelete();
     if (group) {
-      this.groupService.leaveGroup(group.id).subscribe({
+      // Si es admin, elimina el grupo completamente; si no, sale del grupo
+      const deleteObservable = this.isAdmin() 
+        ? this.groupService.deleteGroup(group.id)
+        : this.groupService.leaveGroup(group.id);
+      
+      deleteObservable.subscribe({
         next: () => {
           this.loadGroups();
         },

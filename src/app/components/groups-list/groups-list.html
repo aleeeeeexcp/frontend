@@ -1,14 +1,14 @@
 
 <div class="groups-container fade-in">
   <div class="page-header">
-    <button class="btn-back" routerLink="/dashboard">
+    <button class="btn-back" [routerLink]="dashboardRoute()">
       <i class="bi bi-arrow-left"></i> Dashboard
     </button>
     <div class="header-content">
       <h1>
-        <i class="bi bi-people-fill"></i> Mis Grupos
+        <i class="bi bi-people-fill"></i> {{ isAdmin() ? 'Todos los Grupos' : 'Mis Grupos' }}
       </h1>
-      <a routerLink="/create-group" class="btn-create">
+      <a *ngIf="!isAdmin()" routerLink="/create-group" class="btn-create">
         <i class="bi bi-plus-circle"></i> Crear Grupo
       </a>
     </div>
@@ -27,9 +27,10 @@
 
   <div *ngIf="!loading() && !groups().length && !errorMessage()" class="empty-state">
     <i class="bi bi-inbox"></i>
-    <h2>No tienes grupos</h2>
-    <p>Crea tu primer grupo para colaborar con otros usuarios</p>
-    <a routerLink="/create-group" class="btn-empty">
+    <h2>{{ isAdmin() ? 'No hay grupos en el sistema' : 'No tienes grupos' }}</h2>
+    <p *ngIf="!isAdmin()">Crea tu primer grupo para colaborar con otros usuarios</p>
+    <p *ngIf="isAdmin()">Los grupos creados por los usuarios aparecerán aquí</p>
+    <a *ngIf="!isAdmin()" routerLink="/create-group" class="btn-empty">
       <i class="bi bi-plus-circle"></i> Crear Primer Grupo
     </a>
   </div>
@@ -60,7 +61,7 @@
           <button 
             class="btn-delete" 
             (click)="group.id && deleteGroup(group.id, group.name); $event.stopPropagation()"
-            title="Eliminar grupo">
+            [title]="isAdmin() ? 'Eliminar grupo' : 'Salir del grupo'">
             <i class="bi bi-trash-fill"></i>
           </button>
         </div>
@@ -70,7 +71,7 @@
 
   <app-confirm-dialog
     [isOpen]="showDeleteDialog()"
-    title="Eliminar Grupo"
+    [title]="isAdmin() ? 'Eliminar Grupo Permanentemente' : 'Salir del Grupo'"
     [message]="deleteMessage()"
     confirmText="Eliminar"
     cancelText="Cancelar"

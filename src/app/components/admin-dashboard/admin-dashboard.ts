@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CategoryService } from '../../services/category.service';
+import { GroupService } from '../../services/group.service';
 import { UsersDto } from '../../models/user.model';
 import { CategoryDto } from '../../models/category.model';
+import { GroupDto } from '../../models/group.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,9 +18,11 @@ import { CategoryDto } from '../../models/category.model';
 export class AdminDashboard implements OnInit {
   users = signal<UsersDto[]>([]);
   categories = signal<CategoryDto[]>([]);
+  groups = signal<GroupDto[]>([]);
   
   loadingUsers = signal(true);
   loadingCategories = signal(true);
+  loadingGroups = signal(true);
 
   adminCount = computed(() => 
     this.users().filter(u => u.roleType === 'ADMIN').length
@@ -30,12 +34,14 @@ export class AdminDashboard implements OnInit {
 
   constructor(
     private userService: UserService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private groupService: GroupService
   ) {}
 
   ngOnInit() {
     this.loadUsers();
     this.loadCategories();
+    this.loadGroups();
   }
 
   loadUsers() {
@@ -64,6 +70,21 @@ export class AdminDashboard implements OnInit {
         console.error('✗ Error al cargar categorías:', err);
         this.categories.set([]);
         this.loadingCategories.set(false);
+      }
+    });
+  }
+
+  loadGroups() {
+    this.loadingGroups.set(true);
+    this.groupService.getAllGroups().subscribe({
+      next: (groups) => {
+        this.groups.set(groups || []);
+        this.loadingGroups.set(false);
+      },
+      error: (err) => {
+        console.error('✗ Error al cargar grupos:', err);
+        this.groups.set([]);
+        this.loadingGroups.set(false);
       }
     });
   }
