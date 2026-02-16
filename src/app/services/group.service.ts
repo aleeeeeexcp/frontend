@@ -63,4 +63,11 @@ export class GroupService {
       { headers: this.getHeaders() }
     );
   }
+
+  leaveGroup(groupId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${groupId}/leave`,
+      { headers: this.getHeaders() }
+    );
+  }
 }

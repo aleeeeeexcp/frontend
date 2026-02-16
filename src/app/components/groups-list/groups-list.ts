@@ -59,7 +59,7 @@ export class GroupsList implements OnInit {
   confirmDelete() {
     const group = this.groupToDelete();
     if (group) {
-      this.groupService.deleteGroup(group.id).subscribe({
+      this.groupService.leaveGroup(group.id).subscribe({
         next: () => {
           this.loadGroups();
         },

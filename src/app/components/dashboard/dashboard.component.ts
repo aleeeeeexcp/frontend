@@ -258,7 +258,7 @@ export class DashboardComponent implements OnInit {
   confirmDeleteGroup() {
     const groupId = this.groupToDelete();
     if (!groupId) return;
-    this.groupService.deleteGroup(groupId).subscribe({
+    this.groupService.leaveGroup(groupId).subscribe({
       next: () => {
         this.successMessage.set('Grupo eliminado correctamente');
         this.loadGroups();
